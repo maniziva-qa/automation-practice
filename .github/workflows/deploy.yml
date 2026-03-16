@@ -30,14 +30,34 @@ jobs:
           cp -r public site
           touch site/.nojekyll
 
+          # Derive the repo name → becomes the GitHub Pages sub-path
+          # e.g. "automation-practice" → site served at /automation-practice/
           REPO_NAME=$(basename -s .git $(git config --get remote.origin.url))
-          BASE="/${REPO_NAME}/"
-          echo "Base path: ${BASE}"
+          BASE="/${REPO_NAME}"
+          echo "Rewriting paths for base: ${BASE}"
 
-          # Inject <base href> so absolute paths resolve correctly on GitHub Pages
+          # ── HTML files: rewrite root-relative href/src/action attributes ──
           find site -name "*.html" | while read f; do
-            sed -i "s|<head>|<head>\n  <base href=\"${BASE}\">|" "$f"
+            # Static assets & navigation links
+            sed -i "s|href=\"/|href=\"${BASE}/|g"   "$f"
+            sed -i "s|src=\"/|src=\"${BASE}/|g"     "$f"
+            sed -i "s|action=\"/|action=\"${BASE}/|g" "$f"
+            # JS inline: window.open('/...') — used in frames-windows.html
+            sed -i "s|window\.open('/|window.open('${BASE}/|g" "$f"
           done
+
+          # ── JS files: rewrite navigation paths ──────────────────────────
+          # Note: fetch('/api/...') is intentionally left unchanged —
+          # mock-api.js intercepts based on strUrl.includes('/api/') which
+          # works with both the short and fully-qualified URL forms.
+          find site -name "*.js" | while read f; do
+            sed -i "s|'/pages/|'${BASE}/pages/|g"  "$f"
+            sed -i "s|\"/pages/|\"${BASE}/pages/|g" "$f"
+            sed -i "s|'/index\.html|'${BASE}/index.html|g" "$f"
+          done
+
+          echo "Done. Sample from site/index.html:"
+          grep 'href=.*css' site/index.html | head -2
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
