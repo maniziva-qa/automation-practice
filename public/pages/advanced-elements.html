@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced Elements — Automation Practice Lab</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    .flatpickr-input { cursor: pointer; }
+    #slider-value-display { font-weight: 700; font-size: 16px; color: var(--primary); }
+    .tooltip-demo { display: flex; gap: 16px; flex-wrap: wrap; padding: 10px 0; }
+    .tooltip-demo .btn { cursor: default; }
+  </style>
+</head>
+<body>
+  <nav class="sidebar" id="sidebar" data-testid="sidebar-nav">
+    <div class="sidebar-logo"><div class="logo-icon">🧪</div><span>APL</span></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Main</div>
+      <a href="/index.html" class="sidebar-link" data-testid="nav-home"><span class="icon">🏠</span> Dashboard Home</a>
+      <a href="/pages/dashboard.html" class="sidebar-link" data-testid="nav-dashboard"><span class="icon">📊</span> Analytics Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Form Testing</div>
+      <a href="/pages/basic-elements.html" class="sidebar-link" data-testid="nav-basic"><span class="icon">📝</span> Basic Elements</a>
+      <a href="/pages/advanced-elements.html" class="sidebar-link active" data-testid="nav-advanced"><span class="icon">⚙️</span> Advanced Elements</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Table & Data</div>
+      <a href="/pages/tables.html" class="sidebar-link" data-testid="nav-tables"><span class="icon">📋</span> Table Practice</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">UI Interactions</div>
+      <a href="/pages/alerts-popups.html" class="sidebar-link" data-testid="nav-alerts"><span class="icon">🔔</span> Alerts & Popups</a>
+      <a href="/pages/frames-windows.html" class="sidebar-link" data-testid="nav-frames"><span class="icon">🪟</span> Frames & Windows</a>
+      <a href="/pages/wait-scenarios.html" class="sidebar-link" data-testid="nav-waits"><span class="icon">⏱️</span> Wait Scenarios</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Auth & API</div>
+      <a href="/pages/auth.html" class="sidebar-link" data-testid="nav-auth"><span class="icon">🔐</span> Authentication</a>
+      <a href="/pages/api-playground.html" class="sidebar-link" data-testid="nav-api"><span class="icon">🔌</span> API Playground</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Advanced</div>
+      <a href="/pages/shadow-dom.html" class="sidebar-link" data-testid="nav-shadow"><span class="icon">👻</span> Shadow DOM</a>
+      <a href="/pages/complex-challenges.html" class="sidebar-link" data-testid="nav-complex"><span class="icon">🧩</span> Complex Challenges</a>
+    </div>
+      <div class="sidebar-footer" data-testid="sidebar-footer">
+        <span class="dev-label">Developed by</span>
+        <span class="dev-name" id="dev-name" data-testid="dev-name">Manikandan Adaikalam</span>
+        <span>Automation Practice Lab</span>
+      </div>
+  </nav>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-title">⚙️ Advanced Elements</div>
+      <span class="topbar-badge tag-purple">Dynamic Widgets</span>
+    </header>
+
+    <main class="page-content">
+
+      <!-- ── Dynamic Dropdown ──────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Dynamic Dropdown (Dependent)</h3><span class="tag tag-blue">Scenario: select cascading dropdowns</span></div>
+        <div class="card-body grid grid-2">
+          <div class="form-group">
+            <label for="ddl-continent">Continent</label>
+            <select id="ddl-continent" name="continent" class="form-control" data-testid="ddl-continent" onchange="loadCountries()">
+              <option value="">-- Select Continent --</option>
+              <option value="asia">Asia</option>
+              <option value="europe">Europe</option>
+              <option value="americas">Americas</option>
+              <option value="africa">Africa</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ddl-country-dynamic">Country</label>
+            <select id="ddl-country-dynamic" name="countryDynamic" class="form-control" data-testid="ddl-country-dynamic" disabled>
+              <option value="">-- Select Country --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ddl-city">City</label>
+            <select id="ddl-city" name="city" class="form-control" data-testid="ddl-city" disabled>
+              <option value="">-- Select City --</option>
+            </select>
+          </div>
+          <div>
+            <span id="ddl-result" name="ddlResult" data-testid="ddl-result" class="text-muted"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Auto-suggestion Search ─────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Auto-Suggestion Search</h3><span class="tag tag-green">Scenario: type text, wait for suggestions, select item</span></div>
+        <div class="card-body">
+          <div class="form-group autocomplete-wrapper" id="autocomplete-wrapper" data-testid="autocomplete-wrapper">
+            <label for="autocomplete-input">Search Frameworks</label>
+            <input
+              id="autocomplete-input"
+              name="frameworkSearch"
+              type="text"
+              class="form-control"
+              placeholder="Type to search (e.g. 'play', 'sel')..."
+              data-testid="autocomplete-input"
+              autocomplete="off"
+              oninput="onAutoInput(this)"
+            />
+            <div id="autocomplete-list" name="autocompleteList" class="autocomplete-list" data-testid="autocomplete-list" role="listbox"></div>
+          </div>
+          <p id="autocomplete-result" name="autocompleteResult" data-testid="autocomplete-result" class="text-muted mt-2"></p>
+        </div>
+      </div>
+
+      <!-- ── Date / Time Pickers ────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Date &amp; Time Pickers</h3><span class="tag tag-yellow">Scenario: set date/time via input value or UI</span></div>
+        <div class="card-body grid grid-2">
+          <div class="form-group">
+            <label for="input-date">Date Picker</label>
+            <input id="input-date" name="datePicker" type="date" class="form-control" data-testid="input-date" />
+          </div>
+          <div class="form-group">
+            <label for="input-time">Time Picker</label>
+            <input id="input-time" name="timePicker" type="time" class="form-control" data-testid="input-time" />
+          </div>
+          <div class="form-group">
+            <label for="input-datetime">Date &amp; Time</label>
+            <input id="input-datetime" name="datetimePicker" type="datetime-local" class="form-control" data-testid="input-datetime" />
+          </div>
+          <div class="form-group">
+            <label for="input-daterange-start">Date Range — Start</label>
+            <input id="input-daterange-start" name="dateRangeStart" type="date" class="form-control" data-testid="input-daterange-start" />
+            <label for="input-daterange-end" class="mt-2">End</label>
+            <input id="input-daterange-end" name="dateRangeEnd" type="date" class="form-control mt-2" data-testid="input-daterange-end" />
+          </div>
+          <div class="mt-2">
+            <button id="btn-get-date" name="getDateValue" class="btn btn-outline btn-sm" data-testid="btn-get-date" onclick="getDateValues()">Get Values</button>
+            <p id="date-result" name="dateResult" data-testid="date-result" class="text-muted mt-2"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── File Upload ────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>File Upload</h3><span class="tag tag-blue">Scenario: sendKeys file path, assert upload success</span></div>
+        <div class="card-body">
+          <!-- Hidden real input for automation (sendKeys) -->
+          <input id="file-upload-input" name="fileUpload" type="file" data-testid="file-upload-input" style="display:none" onchange="handleFileSelect(this)" multiple accept="image/*,.pdf,.txt,.csv" />
+          <!-- Visible drop zone (triggers the hidden input) -->
+          <div id="file-drop-zone" name="fileDropZone" class="file-drop-zone" data-testid="file-drop-zone" onclick="document.getElementById('file-upload-input').click()" ondrop="handleFileDrop(event)" ondragover="event.preventDefault(); this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')">
+            <div class="upload-icon">📁</div>
+            <p><strong>Click to browse</strong> or drag and drop files here</p>
+            <p class="text-muted" style="font-size:12px">Supports: images, PDF, TXT, CSV</p>
+          </div>
+          <div id="file-list" name="fileList" data-testid="file-list" class="mt-3"></div>
+          <div class="flex gap-3 mt-3">
+            <button id="btn-upload-server" name="uploadServer" class="btn btn-primary btn-sm hidden" data-testid="btn-upload-server" onclick="uploadToServer()">Upload to Server</button>
+            <button id="btn-clear-files" name="clearFiles" class="btn btn-secondary btn-sm hidden" data-testid="btn-clear-files" onclick="clearFiles()">Clear</button>
+          </div>
+          <div id="upload-result" name="uploadResult" data-testid="upload-result"></div>
+        </div>
+      </div>
+
+      <!-- ── Drag and Drop ──────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Drag and Drop</h3><span class="tag tag-purple">Scenario: dragAndDrop(source, target)</span></div>
+        <div class="card-body">
+          <div class="drag-container" id="drag-container" data-testid="drag-container">
+            <div class="drag-zone" id="drag-zone-todo" name="dragZoneTodo" data-testid="drag-zone-todo" ondrop="onDrop(event,'todo')" ondragover="onDragOver(event)">
+              <h4>📋 To Do</h4>
+              <div class="draggable-item" id="drag-item-1" name="dragItem1" data-testid="drag-item-1" draggable="true" ondragstart="onDragStart(event,'1')" data-zone="todo">🔵 Write test cases</div>
+              <div class="draggable-item" id="drag-item-2" name="dragItem2" data-testid="drag-item-2" draggable="true" ondragstart="onDragStart(event,'2')" data-zone="todo">🔵 Setup CI pipeline</div>
+              <div class="draggable-item" id="drag-item-3" name="dragItem3" data-testid="drag-item-3" draggable="true" ondragstart="onDragStart(event,'3')" data-zone="todo">🔵 Code review</div>
+            </div>
+            <div class="drag-zone" id="drag-zone-inprogress" name="dragZoneInProgress" data-testid="drag-zone-inprogress" ondrop="onDrop(event,'inprogress')" ondragover="onDragOver(event)">
+              <h4>🔄 In Progress</h4>
+            </div>
+            <div class="drag-zone" id="drag-zone-done" name="dragZoneDone" data-testid="drag-zone-done" ondrop="onDrop(event,'done')" ondragover="onDragOver(event)">
+              <h4>✅ Done</h4>
+            </div>
+          </div>
+          <p id="drag-result" name="dragResult" data-testid="drag-result" class="text-muted mt-3"></p>
+        </div>
+      </div>
+
+      <!-- ── Slider ─────────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Range Slider</h3><span class="tag tag-green">Scenario: move slider to value, assert displayed value</span></div>
+        <div class="card-body grid grid-2">
+          <div>
+            <label for="slider-volume">Volume: <span id="slider-value-display" data-testid="slider-value-display">50</span></label>
+            <input id="slider-volume" name="volumeSlider" type="range" min="0" max="100" value="50" data-testid="slider-volume" oninput="updateSlider(this,'slider-value-display')" class="mt-2" />
+            <div class="flex" style="justify-content:space-between; font-size:12px; color:var(--text-muted)"><span>0</span><span>50</span><span>100</span></div>
+          </div>
+          <div>
+            <label for="slider-price">Max Price: $<span id="slider-price-display" data-testid="slider-price-display">500</span></label>
+            <input id="slider-price" name="priceSlider" type="range" min="0" max="1000" value="500" step="50" data-testid="slider-price" oninput="updateSlider(this,'slider-price-display','$')" class="mt-2" />
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Toggle Switch ──────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Toggle Switches</h3><span class="tag tag-yellow">Scenario: click toggle, assert aria-checked / class</span></div>
+        <div class="card-body">
+          <div class="flex flex-wrap gap-4">
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input id="toggle-notifications" name="toggleNotifications" type="checkbox" data-testid="toggle-notifications" checked onchange="onToggle(this,'toggle-notifications-label')" />
+                <span class="toggle-slider"></span>
+              </label>
+              <span id="toggle-notifications-label" data-testid="toggle-notifications-label">Notifications: ON</span>
+            </div>
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input id="toggle-darkmode" name="toggleDarkMode" type="checkbox" data-testid="toggle-darkmode" onchange="onToggle(this,'toggle-darkmode-label')" />
+                <span class="toggle-slider"></span>
+              </label>
+              <span id="toggle-darkmode-label" data-testid="toggle-darkmode-label">Dark Mode: OFF</span>
+            </div>
+            <div class="toggle-wrap">
+              <label class="toggle">
+                <input id="toggle-autoplay" name="toggleAutoplay" type="checkbox" data-testid="toggle-autoplay" onchange="onToggle(this,'toggle-autoplay-label')" />
+                <span class="toggle-slider"></span>
+              </label>
+              <span id="toggle-autoplay-label" data-testid="toggle-autoplay-label">Autoplay: OFF</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Tooltips ───────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Tooltips</h3><span class="tag tag-blue">Scenario: hover element, assert tooltip text visible</span></div>
+        <div class="card-body">
+          <div class="tooltip-demo">
+            <button id="tooltip-btn-1" name="tooltipBtn1" class="btn btn-secondary" data-testid="tooltip-btn-1" data-tooltip="This is a helpful tooltip" title="This is a helpful tooltip">Hover Me (CSS Tooltip)</button>
+            <button id="tooltip-btn-2" name="tooltipBtn2" class="btn btn-outline" data-testid="tooltip-btn-2" data-tooltip="Click to learn more about this feature" title="Click to learn more about this feature">Info Button</button>
+            <span id="tooltip-icon" name="tooltipIcon" class="btn btn-warning btn-sm" data-testid="tooltip-icon" data-tooltip="⚠️ Warning: This action cannot be undone" title="Warning: This action cannot be undone">⚠️ Warning</span>
+          </div>
+          <!-- JS-powered tooltip via title attribute — detectable by Selenium's Actions.moveToElement() -->
+          <p class="text-muted mt-2">Above buttons have <code>title</code> &amp; <code>data-tooltip</code> attributes for tooltip automation.</p>
+        </div>
+      </div>
+
+      <!-- ── Progress Bar ───────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Progress Bar</h3><span class="tag tag-green">Scenario: assert aria-valuenow, watch progress to 100</span></div>
+        <div class="card-body">
+          <div class="mb-3">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-muted" style="width:120px">Upload Progress</span>
+              <span id="progress-pct" data-testid="progress-pct" style="font-weight:700;color:var(--primary)">0%</span>
+            </div>
+            <div class="progress">
+              <div id="progress-bar" name="progressBar" class="progress-bar" data-testid="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <button id="btn-start-progress" name="startProgress" class="btn btn-primary btn-sm" data-testid="btn-start-progress" onclick="startProgress()">Start</button>
+            <button id="btn-reset-progress" name="resetProgress" class="btn btn-secondary btn-sm" data-testid="btn-reset-progress" onclick="resetProgress()">Reset</button>
+          </div>
+          <p id="progress-status" name="progressStatus" data-testid="progress-status" class="text-muted mt-2"></p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/js/mock-api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    // ── Dynamic dropdown data
+    const GEO = {
+      asia:     { India:['Mumbai','Delhi','Bangalore'], Japan:['Tokyo','Osaka'], China:['Beijing','Shanghai'] },
+      europe:   { Germany:['Berlin','Munich'], France:['Paris','Lyon'], UK:['London','Manchester'] },
+      americas: { USA:['New York','Los Angeles','Chicago'], Brazil:['São Paulo','Rio'], Canada:['Toronto','Vancouver'] },
+      africa:   { Nigeria:['Lagos','Abuja'], Kenya:['Nairobi','Mombasa'], Egypt:['Cairo','Alexandria'] }
+    };
+
+    function loadCountries() {
+      const cont = document.getElementById('ddl-continent').value;
+      const cDdl = document.getElementById('ddl-country-dynamic');
+      const cityDdl = document.getElementById('ddl-city');
+      cDdl.innerHTML = '<option value="">-- Select Country --</option>';
+      cityDdl.innerHTML = '<option value="">-- Select City --</option>';
+      cityDdl.disabled = true;
+      if (!cont) { cDdl.disabled = true; return; }
+      cDdl.disabled = false;
+      Object.keys(GEO[cont]).forEach(c => {
+        cDdl.innerHTML += `<option value="${c}">${c}</option>`;
+      });
+      cDdl.onchange = function() { loadCities(cont, this.value); };
+    }
+
+    function loadCities(cont, country) {
+      const cityDdl = document.getElementById('ddl-city');
+      cityDdl.innerHTML = '<option value="">-- Select City --</option>';
+      if (!country) { cityDdl.disabled = true; return; }
+      cityDdl.disabled = false;
+      GEO[cont][country].forEach(city => {
+        cityDdl.innerHTML += `<option value="${city}">${city}</option>`;
+      });
+      cityDdl.onchange = function() {
+        document.getElementById('ddl-result').textContent =
+          `Selected: ${document.getElementById('ddl-continent').value} > ${country} > ${this.value}`;
+      };
+    }
+
+    // ── Autocomplete
+    const FRAMEWORKS = ['Selenium','Playwright','Cypress','WebdriverIO','TestCafe','Appium','Nightwatch','Puppeteer','Robot Framework','Cucumber','Rest Assured','Karate','Gatling','JMeter','Postman'];
+    function onAutoInput(input) {
+      const val = input.value.trim().toLowerCase();
+      const list = document.getElementById('autocomplete-list');
+      if (!val) { list.classList.remove('open'); return; }
+      const matches = FRAMEWORKS.filter(f => f.toLowerCase().includes(val));
+      if (!matches.length) { list.classList.remove('open'); return; }
+      list.innerHTML = matches.map(f =>
+        `<div class="autocomplete-item" data-testid="autocomplete-item-${f.toLowerCase().replace(/\s+/g,'-')}" onclick="selectSuggestion('${f}')">${f.replace(new RegExp(`(${val})`,'gi'), '<mark>$1</mark>')}</div>`
+      ).join('');
+      list.classList.add('open');
+    }
+    function selectSuggestion(val) {
+      document.getElementById('autocomplete-input').value = val;
+      document.getElementById('autocomplete-list').classList.remove('open');
+      document.getElementById('autocomplete-result').textContent = `Selected: ${val}`;
+    }
+    document.addEventListener('click', e => {
+      if (!e.target.closest('#autocomplete-wrapper')) document.getElementById('autocomplete-list').classList.remove('open');
+    });
+
+    // ── Date
+    function getDateValues() {
+      const d  = document.getElementById('input-date').value;
+      const t  = document.getElementById('input-time').value;
+      const dt = document.getElementById('input-datetime').value;
+      document.getElementById('date-result').textContent = `Date: ${d||'-'}  Time: ${t||'-'}  DateTime: ${dt||'-'}`;
+    }
+
+    // ── File handling
+    let selectedFiles = [];
+    function handleFileSelect(input) {
+      selectedFiles = [...input.files];
+      renderFileList();
+    }
+    function handleFileDrop(e) {
+      e.preventDefault();
+      document.getElementById('file-drop-zone').classList.remove('drag-over');
+      selectedFiles = [...e.dataTransfer.files];
+      renderFileList();
+    }
+    function renderFileList() {
+      const el = document.getElementById('file-list');
+      if (!selectedFiles.length) { el.innerHTML=''; return; }
+      el.innerHTML = selectedFiles.map((f,i) =>
+        `<div class="flex items-center gap-2 mb-2" data-testid="file-item-${i}">
+          <span>📄</span>
+          <span id="file-name-${i}" data-testid="file-name-${i}">${f.name}</span>
+          <span class="text-muted">(${(f.size/1024).toFixed(1)} KB)</span>
+        </div>`
+      ).join('');
+      document.getElementById('btn-upload-server').classList.remove('hidden');
+      document.getElementById('btn-clear-files').classList.remove('hidden');
+    }
+    function clearFiles() {
+      selectedFiles = [];
+      document.getElementById('file-list').innerHTML = '';
+      document.getElementById('file-upload-input').value = '';
+      document.getElementById('btn-upload-server').classList.add('hidden');
+      document.getElementById('btn-clear-files').classList.add('hidden');
+      document.getElementById('upload-result').innerHTML = '';
+    }
+    async function uploadToServer() {
+      if (!selectedFiles.length) return;
+      const form = new FormData();
+      form.append('file', selectedFiles[0]);
+      try {
+        const res = await fetch('/api/upload', { method:'POST', body: form });
+        const json = await res.json();
+        document.getElementById('upload-result').innerHTML = `<div class="alert alert-success mt-2" data-testid="upload-success">✅ ${json.message}: <strong>${json.filename}</strong> (${(json.size/1024).toFixed(1)} KB)</div>`;
+        showToast('File uploaded!','success');
+      } catch(err) {
+        document.getElementById('upload-result').innerHTML = `<div class="alert alert-danger mt-2" data-testid="upload-error">❌ Upload failed</div>`;
+      }
+    }
+
+    // ── Drag and Drop
+    let draggedId = null;
+    function onDragStart(e, id) {
+      draggedId = id;
+      e.target.classList.add('dragging');
+    }
+    function onDragOver(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add('drag-over');
+    }
+    function onDrop(e, zone) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('drag-over');
+      const el = document.getElementById('drag-item-' + draggedId);
+      if (el) {
+        document.getElementById('drag-zone-' + zone).appendChild(el);
+        el.classList.remove('dragging');
+        el.dataset.zone = zone;
+        document.getElementById('drag-result').textContent = `Item ${draggedId} moved to: ${zone}`;
+      }
+    }
+    document.addEventListener('dragend', e => e.target.classList.remove('dragging'));
+
+    // ── Slider
+    function updateSlider(input, displayId, prefix='') {
+      document.getElementById(displayId).textContent = prefix + input.value;
+    }
+
+    // ── Toggle
+    function onToggle(input, labelId) {
+      const feature = labelId.replace('toggle-','').replace('-label','');
+      document.getElementById(labelId).textContent = `${feature.charAt(0).toUpperCase()+feature.slice(1).replace(/-/g,' ')}: ${input.checked ? 'ON' : 'OFF'}`;
+    }
+
+    // ── Progress
+    let progressInterval = null;
+    function startProgress() {
+      resetProgress();
+      let pct = 0;
+      document.getElementById('btn-start-progress').disabled = true;
+      document.getElementById('progress-status').textContent = 'Uploading...';
+      progressInterval = setInterval(() => {
+        pct += Math.random() * 8 + 2;
+        if (pct >= 100) { pct = 100; clearInterval(progressInterval); document.getElementById('btn-start-progress').disabled = false; document.getElementById('progress-status').textContent = 'Complete!'; showToast('Upload complete!','success'); }
+        const bar = document.getElementById('progress-bar');
+        bar.style.width = pct + '%';
+        bar.setAttribute('aria-valuenow', Math.round(pct));
+        document.getElementById('progress-pct').textContent = Math.round(pct) + '%';
+      }, 200);
+    }
+    function resetProgress() {
+      if (progressInterval) clearInterval(progressInterval);
+      const bar = document.getElementById('progress-bar');
+      bar.style.width = '0%';
+      bar.setAttribute('aria-valuenow', 0);
+      document.getElementById('progress-pct').textContent = '0%';
+      document.getElementById('progress-status').textContent = '';
+      document.getElementById('btn-start-progress').disabled = false;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Automation Practice Lab</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <nav class="sidebar" id="sidebar" data-testid="sidebar-nav">
+    <div class="sidebar-logo"><div class="logo-icon">🧪</div><span>APL</span></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Main</div>
+      <a href="/index.html" class="sidebar-link" data-testid="nav-home"><span class="icon">🏠</span> Dashboard Home</a>
+      <a href="/pages/dashboard.html" class="sidebar-link active" data-testid="nav-dashboard"><span class="icon">📊</span> Analytics Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Form Testing</div>
+      <a href="/pages/basic-elements.html" class="sidebar-link" data-testid="nav-basic"><span class="icon">📝</span> Basic Elements</a>
+      <a href="/pages/advanced-elements.html" class="sidebar-link" data-testid="nav-advanced"><span class="icon">⚙️</span> Advanced Elements</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Table & Data</div>
+      <a href="/pages/tables.html" class="sidebar-link" data-testid="nav-tables"><span class="icon">📋</span> Table Practice</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">UI Interactions</div>
+      <a href="/pages/alerts-popups.html" class="sidebar-link" data-testid="nav-alerts"><span class="icon">🔔</span> Alerts & Popups</a>
+      <a href="/pages/frames-windows.html" class="sidebar-link" data-testid="nav-frames"><span class="icon">🪟</span> Frames & Windows</a>
+      <a href="/pages/wait-scenarios.html" class="sidebar-link" data-testid="nav-waits"><span class="icon">⏱️</span> Wait Scenarios</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Auth & API</div>
+      <a href="/pages/auth.html" class="sidebar-link" data-testid="nav-auth"><span class="icon">🔐</span> Authentication</a>
+      <a href="/pages/api-playground.html" class="sidebar-link" data-testid="nav-api"><span class="icon">🔌</span> API Playground</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Advanced</div>
+      <a href="/pages/shadow-dom.html" class="sidebar-link" data-testid="nav-shadow"><span class="icon">👻</span> Shadow DOM</a>
+      <a href="/pages/complex-challenges.html" class="sidebar-link" data-testid="nav-complex"><span class="icon">🧩</span> Complex Challenges</a>
+    </div>
+      <div class="sidebar-footer" data-testid="sidebar-footer">
+        <span class="dev-label">Developed by</span>
+        <span class="dev-name" id="dev-name" data-testid="dev-name">Manikandan Adaikalam</span>
+        <span>Automation Practice Lab</span>
+      </div>
+  </nav>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-title">📊 Analytics Dashboard</div>
+      <span class="topbar-badge tag-blue">Charts • Stats • Activity</span>
+      <button id="btn-refresh-dashboard" name="refreshDashboard" class="btn btn-secondary btn-sm" data-testid="btn-refresh-dashboard" onclick="refreshAll()">🔄 Refresh</button>
+    </header>
+
+    <main class="page-content">
+
+      <!-- ── Stat Cards ─────────────────────────────────────── -->
+      <div class="grid grid-3 mb-4" id="stat-cards" data-testid="stat-cards">
+        <div class="stat-card" id="stat-total-users" data-testid="stat-total-users">
+          <div class="stat-label">Total Users</div>
+          <div class="stat-value" id="stat-value-users" data-testid="stat-value-users">—</div>
+          <div class="stat-change up" id="stat-change-users" data-testid="stat-change-users">↑ 12% this month</div>
+        </div>
+        <div class="stat-card" id="stat-active-users" data-testid="stat-active-users">
+          <div class="stat-label">Active Users</div>
+          <div class="stat-value" id="stat-value-active" data-testid="stat-value-active">—</div>
+          <div class="stat-change up" id="stat-change-active" data-testid="stat-change-active">↑ 8% this week</div>
+        </div>
+        <div class="stat-card" id="stat-api-calls" data-testid="stat-api-calls">
+          <div class="stat-label">API Calls Today</div>
+          <div class="stat-value" id="stat-value-api" data-testid="stat-value-api">0</div>
+          <div class="stat-change down" id="stat-change-api" data-testid="stat-change-api">↓ 3% vs yesterday</div>
+        </div>
+      </div>
+
+      <!-- ── Charts ─────────────────────────────────────────── -->
+      <div class="grid grid-2">
+
+        <!-- Line chart: user signups over time -->
+        <div class="card">
+          <div class="card-header"><h3>📈 User Signups (Monthly)</h3><span class="tag tag-blue">Scenario: assert chart canvas is visible</span></div>
+          <div class="card-body">
+            <canvas id="chart-signups" name="chartSignups" data-testid="chart-signups" height="180"></canvas>
+          </div>
+        </div>
+
+        <!-- Doughnut chart: role distribution -->
+        <div class="card">
+          <div class="card-header"><h3>🍩 User Roles Distribution</h3><span class="tag tag-purple">Scenario: read legend labels</span></div>
+          <div class="card-body">
+            <canvas id="chart-roles" name="chartRoles" data-testid="chart-roles" height="180"></canvas>
+          </div>
+        </div>
+
+        <!-- Bar chart: department headcount -->
+        <div class="card">
+          <div class="card-header"><h3>📊 Department Headcount</h3><span class="tag tag-green">Scenario: assert bar chart data attributes</span></div>
+          <div class="card-body">
+            <canvas id="chart-departments" name="chartDepartments" data-testid="chart-departments" height="180"></canvas>
+          </div>
+        </div>
+
+        <!-- Line chart: API response times -->
+        <div class="card">
+          <div class="card-header"><h3>⚡ API Response Time (ms)</h3><span class="tag tag-yellow">Live updating chart</span></div>
+          <div class="card-body">
+            <canvas id="chart-response-time" name="chartResponseTime" data-testid="chart-response-time" height="180"></canvas>
+            <div class="flex gap-3 mt-3">
+              <button id="btn-start-live" name="startLive" class="btn btn-success btn-sm" data-testid="btn-start-live" onclick="startLiveChart()">▶ Start Live</button>
+              <button id="btn-stop-live" name="stopLive" class="btn btn-secondary btn-sm" data-testid="btn-stop-live" onclick="stopLiveChart()">⏸ Stop</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Activity Log ───────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>📋 Activity Log</h3>
+          <span class="tag tag-blue">Scenario: read log entries, assert timestamps</span>
+          <button id="btn-clear-log" name="clearLog" class="btn btn-secondary btn-sm" style="margin-left:auto" data-testid="btn-clear-log" onclick="clearLog()">Clear</button>
+          <button id="btn-add-log" name="addLog" class="btn btn-outline btn-sm" data-testid="btn-add-log" onclick="addLogEntry()">+ Add Entry</button>
+        </div>
+        <div class="card-body table-wrapper" style="max-height:300px; overflow-y:auto;" id="activity-log-container" data-testid="activity-log-container">
+          <table id="activity-log-table" name="activityLogTable" data-testid="activity-log-table">
+            <thead>
+              <tr>
+                <th data-testid="log-th-time">Timestamp</th>
+                <th data-testid="log-th-user">User</th>
+                <th data-testid="log-th-action">Action</th>
+                <th data-testid="log-th-status">Status</th>
+              </tr>
+            </thead>
+            <tbody id="activity-log-body" data-testid="activity-log-body">
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/js/mock-api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    let liveChartInterval = null;
+    let apiCallCount = 0;
+    const charts = {};
+    let logEntries = [];
+
+    // ── Load stats from API
+    async function loadStats() {
+      try {
+        const { data } = await apiCall('GET', '/api/users');
+        const users  = data.data || [];
+        const active = users.filter(u => u.status === 'active').length;
+        document.getElementById('stat-value-users').textContent = users.length;
+        document.getElementById('stat-value-active').textContent = active;
+      } catch(e) {
+        document.getElementById('stat-value-users').textContent = '5';
+        document.getElementById('stat-value-active').textContent = '3';
+      }
+    }
+
+    // ── Signups line chart
+    function initSignupsChart() {
+      const ctx = document.getElementById('chart-signups').getContext('2d');
+      charts.signups = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+          datasets: [{
+            label: 'New Users',
+            data: [12,19,8,24,31,28,36,42,30,38,45,52],
+            fill: true,
+            backgroundColor: 'rgba(37,99,235,0.08)',
+            borderColor: '#2563eb',
+            tension: 0.4,
+            pointBackgroundColor: '#2563eb',
+            pointRadius: 4
+          }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+      });
+    }
+
+    // ── Roles doughnut
+    function initRolesChart() {
+      const ctx = document.getElementById('chart-roles').getContext('2d');
+      charts.roles = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Admin','Manager','User'],
+          datasets: [{
+            data: [2, 3, 10],
+            backgroundColor: ['#7c3aed','#2563eb','#16a34a'],
+            borderWidth: 2,
+            borderColor: '#fff'
+          }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+      });
+    }
+
+    // ── Departments bar chart
+    function initDeptChart() {
+      const ctx = document.getElementById('chart-departments').getContext('2d');
+      charts.depts = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Engineering','Marketing','HR','Finance','Product','Sales'],
+          datasets: [{
+            label: 'Headcount',
+            data: [8, 4, 3, 5, 6, 4],
+            backgroundColor: ['#dbeafe','#dcfce7','#fef9c3','#ede9fe','#fce7f3','#ffedd5'],
+            borderColor: ['#2563eb','#16a34a','#a16207','#7c3aed','#be185d','#c2410c'],
+            borderWidth: 2,
+            borderRadius: 4
+          }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+      });
+    }
+
+    // ── Live response time chart
+    function initLiveChart() {
+      const ctx = document.getElementById('chart-response-time').getContext('2d');
+      const labels = Array.from({length: 10}, (_, i) => `-${9-i}s`);
+      const data   = Array.from({length: 10}, () => Math.floor(Math.random() * 200 + 50));
+      charts.live = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [{
+            label: 'Response Time (ms)',
+            data,
+            fill: false,
+            borderColor: '#d97706',
+            tension: 0.3,
+            pointRadius: 3
+          }]
+        },
+        options: { responsive: true, animation: false, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 600 } } }
+      });
+    }
+
+    function startLiveChart() {
+      if (liveChartInterval) return;
+      liveChartInterval = setInterval(() => {
+        const chart = charts.live;
+        chart.data.labels.push('now');
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.push(Math.floor(Math.random() * 400 + 30));
+        chart.data.datasets[0].data.shift();
+        chart.update('none');
+        apiCallCount++;
+        document.getElementById('stat-value-api').textContent = apiCallCount;
+      }, 1000);
+    }
+
+    function stopLiveChart() {
+      clearInterval(liveChartInterval);
+      liveChartInterval = null;
+    }
+
+    // ── Activity log
+    const LOG_ACTIONS = [
+      ['alice', 'User login',      'success'],
+      ['bob',   'GET /api/users',  'success'],
+      ['carol', 'POST /api/users', 'success'],
+      ['david', 'DELETE user #3',  'success'],
+      ['admin', 'System check',    'success'],
+      ['eva',   'Failed login',    'error'],
+      ['bot',   'Rate limit hit',  'warning']
+    ];
+    let logCounter = 0;
+
+    function addLogEntry(user, action, status) {
+      logCounter++;
+      const idx = logCounter % LOG_ACTIONS.length;
+      const [u, a, s] = user ? [user, action, status] : LOG_ACTIONS[idx];
+      const ts = new Date().toLocaleTimeString();
+      logEntries.unshift({ id: logCounter, time: ts, user: u, action: a, status: s });
+      renderLog();
+    }
+
+    function renderLog() {
+      const tbody = document.getElementById('activity-log-body');
+      tbody.innerHTML = logEntries.slice(0, 20).map((e, i) =>
+        `<tr id="log-row-${e.id}" data-testid="log-row-${e.id}">
+          <td data-testid="log-cell-time-${e.id}" style="font-family:monospace; font-size:12px;">${e.time}</td>
+          <td data-testid="log-cell-user-${e.id}">${e.user}</td>
+          <td data-testid="log-cell-action-${e.id}">${e.action}</td>
+          <td><span class="badge ${e.status === 'success' ? 'badge-active' : e.status === 'error' ? 'badge-locked' : 'badge-inactive'}" data-testid="log-cell-status-${e.id}">${e.status}</span></td>
+        </tr>`
+      ).join('');
+    }
+
+    function clearLog() {
+      logEntries = [];
+      renderLog();
+    }
+
+    // ── Refresh all
+    function refreshAll() {
+      loadStats();
+      showToast('Dashboard refreshed!', 'info', 2000);
+      // Add a log entry to activity log
+      addLogEntry('admin', 'Dashboard refreshed', 'success');
+    }
+
+    // ── Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      loadStats();
+      initSignupsChart();
+      initRolesChart();
+      initDeptChart();
+      initLiveChart();
+      // Pre-populate activity log
+      for (let i = 0; i < 5; i++) addLogEntry();
+    });
+  </script>
+</body>
+</html>

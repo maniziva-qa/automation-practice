@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Table Practice — Automation Practice Lab</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    .editable-cell input { width:100%; border:1px solid var(--primary); border-radius:4px; padding:4px 6px; font-size:13px; }
+    .action-btns { display:flex; gap:6px; }
+  </style>
+</head>
+<body>
+  <nav class="sidebar" id="sidebar" data-testid="sidebar-nav">
+    <div class="sidebar-logo"><div class="logo-icon">🧪</div><span>APL</span></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Main</div>
+      <a href="/index.html" class="sidebar-link" data-testid="nav-home"><span class="icon">🏠</span> Dashboard Home</a>
+      <a href="/pages/dashboard.html" class="sidebar-link" data-testid="nav-dashboard"><span class="icon">📊</span> Analytics Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Form Testing</div>
+      <a href="/pages/basic-elements.html" class="sidebar-link" data-testid="nav-basic"><span class="icon">📝</span> Basic Elements</a>
+      <a href="/pages/advanced-elements.html" class="sidebar-link" data-testid="nav-advanced"><span class="icon">⚙️</span> Advanced Elements</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Table & Data</div>
+      <a href="/pages/tables.html" class="sidebar-link active" data-testid="nav-tables"><span class="icon">📋</span> Table Practice</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">UI Interactions</div>
+      <a href="/pages/alerts-popups.html" class="sidebar-link" data-testid="nav-alerts"><span class="icon">🔔</span> Alerts & Popups</a>
+      <a href="/pages/frames-windows.html" class="sidebar-link" data-testid="nav-frames"><span class="icon">🪟</span> Frames & Windows</a>
+      <a href="/pages/wait-scenarios.html" class="sidebar-link" data-testid="nav-waits"><span class="icon">⏱️</span> Wait Scenarios</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Auth & API</div>
+      <a href="/pages/auth.html" class="sidebar-link" data-testid="nav-auth"><span class="icon">🔐</span> Authentication</a>
+      <a href="/pages/api-playground.html" class="sidebar-link" data-testid="nav-api"><span class="icon">🔌</span> API Playground</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Advanced</div>
+      <a href="/pages/shadow-dom.html" class="sidebar-link" data-testid="nav-shadow"><span class="icon">👻</span> Shadow DOM</a>
+      <a href="/pages/complex-challenges.html" class="sidebar-link" data-testid="nav-complex"><span class="icon">🧩</span> Complex Challenges</a>
+    </div>
+      <div class="sidebar-footer" data-testid="sidebar-footer">
+        <span class="dev-label">Developed by</span>
+        <span class="dev-name" id="dev-name" data-testid="dev-name">Manikandan Adaikalam</span>
+        <span>Automation Practice Lab</span>
+      </div>
+  </nav>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-title">📋 Table Practice</div>
+      <span class="topbar-badge tag-green">CRUD • Sort • Filter • Paginate</span>
+    </header>
+
+    <main class="page-content">
+
+      <!-- ── 1. Static Table ───────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>1. Static Table</h3><span class="tag tag-blue">Scenario: read cell values, assert row count</span></div>
+        <div class="card-body table-wrapper">
+          <table id="static-table" name="staticTable" data-testid="static-table">
+            <thead>
+              <tr>
+                <th data-testid="static-th-id">#</th>
+                <th data-testid="static-th-name">Name</th>
+                <th data-testid="static-th-email">Email</th>
+                <th data-testid="static-th-role">Role</th>
+                <th data-testid="static-th-status">Status</th>
+              </tr>
+            </thead>
+            <tbody id="static-table-body" data-testid="static-table-body">
+              <tr data-testid="static-row-1">
+                <td data-testid="static-cell-1-id">1</td>
+                <td data-testid="static-cell-1-name">Alice Johnson</td>
+                <td data-testid="static-cell-1-email">alice@example.com</td>
+                <td data-testid="static-cell-1-role"><span class="badge badge-admin">Admin</span></td>
+                <td data-testid="static-cell-1-status"><span class="badge badge-active">Active</span></td>
+              </tr>
+              <tr data-testid="static-row-2">
+                <td data-testid="static-cell-2-id">2</td>
+                <td data-testid="static-cell-2-name">Bob Smith</td>
+                <td data-testid="static-cell-2-email">bob@example.com</td>
+                <td data-testid="static-cell-2-role"><span class="badge badge-user">User</span></td>
+                <td data-testid="static-cell-2-status"><span class="badge badge-active">Active</span></td>
+              </tr>
+              <tr data-testid="static-row-3">
+                <td data-testid="static-cell-3-id">3</td>
+                <td data-testid="static-cell-3-name">Carol White</td>
+                <td data-testid="static-cell-3-email">carol@example.com</td>
+                <td data-testid="static-cell-3-role"><span class="badge badge-manager">Manager</span></td>
+                <td data-testid="static-cell-3-status"><span class="badge badge-inactive">Inactive</span></td>
+              </tr>
+              <tr data-testid="static-row-4">
+                <td data-testid="static-cell-4-id">4</td>
+                <td data-testid="static-cell-4-name">David Lee</td>
+                <td data-testid="static-cell-4-email">david@example.com</td>
+                <td data-testid="static-cell-4-role"><span class="badge badge-user">User</span></td>
+                <td data-testid="static-cell-4-status"><span class="badge badge-active">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── 2. Sortable Table ──────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>2. Sortable Table</h3><span class="tag tag-yellow">Scenario: click header to sort ASC/DESC</span></div>
+        <div class="card-body table-wrapper">
+          <table id="sortable-table" name="sortableTable" data-testid="sortable-table">
+            <thead>
+              <tr>
+                <th class="sortable" data-testid="sort-th-name" onclick="sortTable('name')" data-col="name">Name <span id="sort-icon-name">↕</span></th>
+                <th class="sortable" data-testid="sort-th-age"  onclick="sortTable('age')"  data-col="age">Age <span id="sort-icon-age">↕</span></th>
+                <th class="sortable" data-testid="sort-th-dept" onclick="sortTable('dept')" data-col="dept">Department <span id="sort-icon-dept">↕</span></th>
+                <th class="sortable" data-testid="sort-th-salary" onclick="sortTable('salary')" data-col="salary">Salary <span id="sort-icon-salary">↕</span></th>
+              </tr>
+            </thead>
+            <tbody id="sortable-table-body" data-testid="sortable-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── 3. Searchable + Filterable Table ──────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>3. Searchable Table</h3><span class="tag tag-blue">Scenario: type in search box, assert filtered rows</span></div>
+        <div class="card-body">
+          <div class="flex gap-3 mb-3 flex-wrap items-center">
+            <input id="table-search" name="tableSearch" type="text" class="form-control" style="max-width:300px" placeholder="Search by name or email..." data-testid="table-search" oninput="filterTable()" />
+            <select id="table-filter-role" name="tableFilterRole" class="form-control" style="max-width:180px" data-testid="table-filter-role" onchange="filterTable()">
+              <option value="">All Roles</option>
+              <option value="Admin">Admin</option>
+              <option value="Manager">Manager</option>
+              <option value="User">User</option>
+            </select>
+            <select id="table-filter-status" name="tableFilterStatus" class="form-control" style="max-width:180px" data-testid="table-filter-status" onchange="filterTable()">
+              <option value="">All Statuses</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="locked">Locked</option>
+            </select>
+            <button id="btn-clear-filter" name="clearFilter" class="btn btn-secondary btn-sm" data-testid="btn-clear-filter" onclick="clearFilters()">Clear</button>
+          </div>
+          <div class="table-wrapper">
+            <table id="search-table" name="searchTable" data-testid="search-table">
+              <thead>
+                <tr>
+                  <th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Department</th>
+                </tr>
+              </thead>
+              <tbody id="search-table-body" data-testid="search-table-body"></tbody>
+            </table>
+          </div>
+          <p id="search-count" name="searchCount" data-testid="search-count" class="text-muted mt-2"></p>
+        </div>
+      </div>
+
+      <!-- ── 4. Pagination Table ────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>4. Pagination Table</h3><span class="tag tag-purple">Scenario: navigate pages, assert page content</span></div>
+        <div class="card-body">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-muted">Rows per page:</span>
+            <select id="page-size" name="pageSize" class="form-control" style="width:80px" data-testid="page-size-select" onchange="goToPage(1)">
+              <option value="3" selected>3</option>
+              <option value="5">5</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <div class="table-wrapper">
+            <table id="pagination-table" name="paginationTable" data-testid="pagination-table">
+              <thead>
+                <tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Dept</th></tr>
+              </thead>
+              <tbody id="pagination-table-body" data-testid="pagination-table-body"></tbody>
+            </table>
+          </div>
+          <div class="flex items-center gap-3 mt-3">
+            <div class="pagination" id="pagination-controls" data-testid="pagination-controls"></div>
+            <span id="pagination-info" name="paginationInfo" data-testid="pagination-info" class="text-muted"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 5. Editable Row Table ──────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>5. Editable Row Table</h3><span class="tag tag-red">Scenario: edit row inline, save, delete</span></div>
+        <div class="card-body">
+          <div class="mb-3">
+            <button id="btn-add-row" name="addRow" class="btn btn-success btn-sm" data-testid="btn-add-row" onclick="addEditableRow()">+ Add Row</button>
+          </div>
+          <div class="table-wrapper">
+            <table id="editable-table" name="editableTable" data-testid="editable-table">
+              <thead>
+                <tr><th>Name</th><th>Email</th><th>Role</th><th>Actions</th></tr>
+              </thead>
+              <tbody id="editable-table-body" data-testid="editable-table-body"></tbody>
+            </table>
+          </div>
+          <p id="editable-result" name="editableResult" data-testid="editable-result" class="text-muted mt-2"></p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/js/mock-api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    // ── Data sets
+    const SORT_DATA = [
+      { name:'Alice Johnson', age:32, dept:'Engineering', salary:95000 },
+      { name:'Bob Smith',     age:28, dept:'Marketing',   salary:72000 },
+      { name:'Carol White',   age:45, dept:'HR',          salary:88000 },
+      { name:'David Lee',     age:35, dept:'Finance',     salary:110000 },
+      { name:'Eva Martinez',  age:29, dept:'Engineering', salary:98000 },
+      { name:'Frank Wilson',  age:41, dept:'Marketing',   salary:78000 }
+    ];
+
+    const ALL_USERS = [
+      { id:1, name:'Alice Johnson', email:'alice@example.com', role:'Admin',   status:'active',   dept:'Engineering' },
+      { id:2, name:'Bob Smith',     email:'bob@example.com',   role:'User',    status:'active',   dept:'Marketing' },
+      { id:3, name:'Carol White',   email:'carol@example.com', role:'Manager', status:'inactive', dept:'HR' },
+      { id:4, name:'David Lee',     email:'david@example.com', role:'User',    status:'active',   dept:'Finance' },
+      { id:5, name:'Eva Martinez',  email:'eva@example.com',   role:'User',    status:'locked',   dept:'Engineering' },
+      { id:6, name:'Frank Wilson',  email:'frank@example.com', role:'User',    status:'active',   dept:'Marketing' },
+      { id:7, name:'Grace Kim',     email:'grace@example.com', role:'Manager', status:'active',   dept:'Product' },
+      { id:8, name:'Henry Brown',   email:'henry@example.com', role:'User',    status:'inactive', dept:'Finance' },
+      { id:9, name:'Iris Chen',     email:'iris@example.com',  role:'Admin',   status:'active',   dept:'Engineering' },
+      { id:10,name:'Jack Taylor',   email:'jack@example.com',  role:'User',    status:'active',   dept:'Sales' }
+    ];
+
+    // ── Sortable table
+    let sortDir = {};
+    function sortTable(col) {
+      sortDir[col] = sortDir[col] === 'asc' ? 'desc' : 'asc';
+      const icons = { asc:'↑', desc:'↓' };
+      document.querySelectorAll('[id^="sort-icon-"]').forEach(i => i.textContent = '↕');
+      document.getElementById(`sort-icon-${col}`).textContent = icons[sortDir[col]];
+      SORT_DATA.sort((a, b) => {
+        const v1 = a[col], v2 = b[col];
+        return sortDir[col] === 'asc' ? (v1 > v2 ? 1 : -1) : (v1 < v2 ? 1 : -1);
+      });
+      renderSortableTable();
+    }
+    function renderSortableTable() {
+      document.getElementById('sortable-table-body').innerHTML = SORT_DATA.map((r, i) =>
+        `<tr data-testid="sort-row-${i+1}">
+          <td data-testid="sort-cell-${i+1}-name">${r.name}</td>
+          <td data-testid="sort-cell-${i+1}-age">${r.age}</td>
+          <td data-testid="sort-cell-${i+1}-dept">${r.dept}</td>
+          <td data-testid="sort-cell-${i+1}-salary">$${r.salary.toLocaleString()}</td>
+        </tr>`
+      ).join('');
+    }
+    renderSortableTable();
+
+    // ── Searchable table
+    function filterTable() {
+      const q      = document.getElementById('table-search').value.toLowerCase();
+      const role   = document.getElementById('table-filter-role').value;
+      const status = document.getElementById('table-filter-status').value;
+      let filtered = ALL_USERS.filter(u => {
+        const matchQ = !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+        const matchR = !role   || u.role   === role;
+        const matchS = !status || u.status === status;
+        return matchQ && matchR && matchS;
+      });
+      document.getElementById('search-table-body').innerHTML = filtered.length
+        ? filtered.map((u,i) =>
+          `<tr data-testid="search-row-${i+1}">
+            <td data-testid="search-cell-${i+1}-name">${u.name}</td>
+            <td data-testid="search-cell-${i+1}-email">${u.email}</td>
+            <td><span class="badge badge-${u.role.toLowerCase()}">${u.role}</span></td>
+            <td><span class="badge badge-${u.status}">${u.status}</span></td>
+            <td data-testid="search-cell-${i+1}-dept">${u.dept}</td>
+          </tr>`).join('')
+        : `<tr><td colspan="5" class="text-center text-muted" data-testid="search-no-results">No results found</td></tr>`;
+      document.getElementById('search-count').textContent = `Showing ${filtered.length} of ${ALL_USERS.length} users`;
+    }
+    function clearFilters() {
+      document.getElementById('table-search').value = '';
+      document.getElementById('table-filter-role').value = '';
+      document.getElementById('table-filter-status').value = '';
+      filterTable();
+    }
+    filterTable();
+
+    // ── Pagination table
+    let currentPage = 1;
+    function goToPage(page) {
+      currentPage = page;
+      const size  = parseInt(document.getElementById('page-size').value);
+      const total = ALL_USERS.length;
+      const pages = Math.ceil(total / size);
+      const start = (page - 1) * size;
+      const slice = ALL_USERS.slice(start, start + size);
+      document.getElementById('pagination-table-body').innerHTML = slice.map((u, i) =>
+        `<tr data-testid="page-row-${start+i+1}">
+          <td>${start+i+1}</td>
+          <td data-testid="page-cell-name-${start+i+1}">${u.name}</td>
+          <td>${u.email}</td>
+          <td><span class="badge badge-${u.role.toLowerCase()}">${u.role}</span></td>
+          <td>${u.dept}</td>
+        </tr>`
+      ).join('');
+      // Pagination controls
+      let html = `<button class="page-btn" id="btn-prev-page" data-testid="btn-prev-page" onclick="goToPage(${page-1})" ${page===1?'disabled':''}>← Prev</button>`;
+      for (let p = 1; p <= pages; p++) {
+        html += `<button class="page-btn ${p===page?'active':''}" id="btn-page-${p}" data-testid="btn-page-${p}" onclick="goToPage(${p})">${p}</button>`;
+      }
+      html += `<button class="page-btn" id="btn-next-page" data-testid="btn-next-page" onclick="goToPage(${page+1})" ${page===pages?'disabled':''}>Next →</button>`;
+      document.getElementById('pagination-controls').innerHTML = html;
+      document.getElementById('pagination-info').textContent = `Page ${page} of ${pages} (${total} total)`;
+    }
+    goToPage(1);
+
+    // ── Editable table
+    let editableData = [
+      { id:1, name:'Alice Johnson', email:'alice@example.com', role:'Admin' },
+      { id:2, name:'Bob Smith',     email:'bob@example.com',   role:'User' },
+      { id:3, name:'Carol White',   email:'carol@example.com', role:'Manager' }
+    ];
+    let nextEditId = 4;
+
+    function renderEditableTable() {
+      document.getElementById('editable-table-body').innerHTML = editableData.map(r =>
+        `<tr id="edit-row-${r.id}" data-testid="edit-row-${r.id}" data-id="${r.id}">
+          <td id="edit-cell-name-${r.id}" data-testid="edit-cell-name-${r.id}">${r.name}</td>
+          <td id="edit-cell-email-${r.id}" data-testid="edit-cell-email-${r.id}">${r.email}</td>
+          <td id="edit-cell-role-${r.id}" data-testid="edit-cell-role-${r.id}">${r.role}</td>
+          <td class="action-btns">
+            <button id="btn-edit-${r.id}" data-testid="btn-edit-${r.id}" class="btn btn-secondary btn-sm" onclick="editRow(${r.id})">Edit</button>
+            <button id="btn-delete-${r.id}" data-testid="btn-delete-${r.id}" class="btn btn-danger btn-sm" onclick="deleteRow(${r.id})">Delete</button>
+          </td>
+        </tr>`
+      ).join('');
+    }
+
+    function editRow(id) {
+      const row = editableData.find(r => r.id === id);
+      const tr  = document.getElementById(`edit-row-${id}`);
+      tr.innerHTML = `
+        <td class="editable-cell"><input id="input-edit-name-${id}" data-testid="input-edit-name-${id}" value="${row.name}" class="form-control" /></td>
+        <td class="editable-cell"><input id="input-edit-email-${id}" data-testid="input-edit-email-${id}" value="${row.email}" class="form-control" /></td>
+        <td class="editable-cell"><input id="input-edit-role-${id}" data-testid="input-edit-role-${id}" value="${row.role}" class="form-control" /></td>
+        <td class="action-btns">
+          <button id="btn-save-${id}" data-testid="btn-save-${id}" class="btn btn-success btn-sm" onclick="saveRow(${id})">Save</button>
+          <button id="btn-cancel-${id}" data-testid="btn-cancel-${id}" class="btn btn-secondary btn-sm" onclick="renderEditableTable()">Cancel</button>
+        </td>`;
+    }
+
+    function saveRow(id) {
+      const row = editableData.find(r => r.id === id);
+      row.name  = document.getElementById(`input-edit-name-${id}`).value;
+      row.email = document.getElementById(`input-edit-email-${id}`).value;
+      row.role  = document.getElementById(`input-edit-role-${id}`).value;
+      renderEditableTable();
+      document.getElementById('editable-result').textContent = `Row ${id} updated.`;
+      showToast('Row saved!', 'success');
+    }
+
+    function deleteRow(id) {
+      if (!confirm(`Delete row ${id}?`)) return;
+      editableData = editableData.filter(r => r.id !== id);
+      renderEditableTable();
+      document.getElementById('editable-result').textContent = `Row ${id} deleted.`;
+      showToast('Row deleted!', 'error', 2000);
+    }
+
+    function addEditableRow() {
+      editableData.push({ id: nextEditId++, name:'New User', email:'new@example.com', role:'User' });
+      renderEditableTable();
+    }
+
+    renderEditableTable();
+  </script>
+</body>
+</html>

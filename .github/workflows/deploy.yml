@@ -1,0 +1,52 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare static site
+        run: |
+          # Copy public/ into a staging directory
+          cp -r public site
+
+          # Create .nojekyll so GitHub Pages doesn't ignore _* folders
+          touch site/.nojekyll
+
+          # Get the repo name from the remote URL (used as the base path)
+          REPO_NAME=$(basename -s .git $(git config --get remote.origin.url))
+          BASE="/${REPO_NAME}/"
+          echo "Injecting <base href=\"${BASE}\"> into all HTML files"
+
+          # Inject <base> tag right after <head> in every HTML file so
+          # absolute paths like /css/styles.css resolve correctly on GitHub Pages
+          find site -name "*.html" | while read f; do
+            sed -i "s|<head>|<head>\n  <base href=\"${BASE}\">|" "$f"
+          done
+
+          # Also rewrite href="/js/ and href="/css/ inside <script src> and <link href>
+          # to be root-relative via the base tag (the base tag handles this automatically,
+          # but let's also fix any window.location checks in mock-api)
+          # Patch mock-api.js to also treat the github.io path as static
+          # (already handled via hostname check — no extra work needed)
+
+          echo "Site ready in ./site/"
+          ls site/
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          publish_branch: gh-pages
+          commit_message: "Deploy: ${{ github.event.head_commit.message }}"

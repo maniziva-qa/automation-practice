@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Basic Elements — Automation Practice Lab</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <!-- Sidebar reused from index -->
+  <nav class="sidebar" id="sidebar" data-testid="sidebar-nav">
+    <div class="sidebar-logo"><div class="logo-icon">🧪</div><span>APL</span></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Main</div>
+      <a href="/index.html" class="sidebar-link" data-testid="nav-home"><span class="icon">🏠</span> Dashboard Home</a>
+      <a href="/pages/dashboard.html" class="sidebar-link" data-testid="nav-dashboard"><span class="icon">📊</span> Analytics Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Form Testing</div>
+      <a href="/pages/basic-elements.html" class="sidebar-link active" data-testid="nav-basic"><span class="icon">📝</span> Basic Elements</a>
+      <a href="/pages/advanced-elements.html" class="sidebar-link" data-testid="nav-advanced"><span class="icon">⚙️</span> Advanced Elements</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Table & Data</div>
+      <a href="/pages/tables.html" class="sidebar-link" data-testid="nav-tables"><span class="icon">📋</span> Table Practice</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">UI Interactions</div>
+      <a href="/pages/alerts-popups.html" class="sidebar-link" data-testid="nav-alerts"><span class="icon">🔔</span> Alerts & Popups</a>
+      <a href="/pages/frames-windows.html" class="sidebar-link" data-testid="nav-frames"><span class="icon">🪟</span> Frames & Windows</a>
+      <a href="/pages/wait-scenarios.html" class="sidebar-link" data-testid="nav-waits"><span class="icon">⏱️</span> Wait Scenarios</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Auth & API</div>
+      <a href="/pages/auth.html" class="sidebar-link" data-testid="nav-auth"><span class="icon">🔐</span> Authentication</a>
+      <a href="/pages/api-playground.html" class="sidebar-link" data-testid="nav-api"><span class="icon">🔌</span> API Playground</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Advanced</div>
+      <a href="/pages/shadow-dom.html" class="sidebar-link" data-testid="nav-shadow"><span class="icon">👻</span> Shadow DOM</a>
+      <a href="/pages/complex-challenges.html" class="sidebar-link" data-testid="nav-complex"><span class="icon">🧩</span> Complex Challenges</a>
+    </div>
+      <div class="sidebar-footer" data-testid="sidebar-footer">
+        <span class="dev-label">Developed by</span>
+        <span class="dev-name" id="dev-name" data-testid="dev-name">Manikandan Adaikalam</span>
+        <span>Automation Practice Lab</span>
+      </div>
+  </nav>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-title">📝 Basic Elements</div>
+      <span class="topbar-badge tag-blue">Selenium / Playwright / Cypress</span>
+    </header>
+
+    <main class="page-content">
+
+      <!-- ── Text Inputs ────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Text Input Fields</h3>
+          <span class="tag tag-blue">Scenario: locate &amp; type into inputs</span>
+        </div>
+        <div class="card-body grid grid-2">
+          <div class="form-group">
+            <label for="txt-name">Full Name</label>
+            <input
+              id="txt-name"
+              name="fullName"
+              type="text"
+              class="form-control"
+              placeholder="Enter your full name"
+              data-testid="input-full-name"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="txt-email">Email Address</label>
+            <input
+              id="txt-email"
+              name="email"
+              type="email"
+              class="form-control"
+              placeholder="user@example.com"
+              data-testid="input-email"
+              autocomplete="off"
+            />
+          </div>
+          <div class="form-group">
+            <label for="txt-phone">Phone Number</label>
+            <input
+              id="txt-phone"
+              name="phone"
+              type="tel"
+              class="form-control"
+              placeholder="+1 555 000 0000"
+              data-testid="input-phone"
+            />
+          </div>
+          <div class="form-group">
+            <label for="txt-number">Age (Number)</label>
+            <input
+              id="txt-number"
+              name="age"
+              type="number"
+              class="form-control"
+              placeholder="18"
+              min="0" max="120"
+              data-testid="input-age"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Password ───────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Password Field</h3>
+          <span class="tag tag-green">Scenario: assert input type="password"</span>
+        </div>
+        <div class="card-body grid grid-2">
+          <div class="form-group">
+            <label for="txt-password">Password</label>
+            <div class="flex gap-2 items-center">
+              <input
+                id="txt-password"
+                name="password"
+                type="password"
+                class="form-control"
+                placeholder="Enter password"
+                data-testid="input-password"
+              />
+              <button
+                id="btn-toggle-password"
+                name="togglePassword"
+                class="btn btn-secondary btn-sm"
+                data-testid="btn-toggle-password"
+                onclick="togglePassword()"
+                title="Show/hide password"
+                style="white-space:nowrap"
+              >👁 Show</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="txt-confirm-password">Confirm Password</label>
+            <input
+              id="txt-confirm-password"
+              name="confirmPassword"
+              type="password"
+              class="form-control"
+              placeholder="Repeat password"
+              data-testid="input-confirm-password"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Textarea ───────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Textarea</h3>
+          <span class="tag tag-yellow">Scenario: clear &amp; fill multi-line text</span>
+        </div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="txt-textarea">Comments / Notes</label>
+            <textarea
+              id="txt-textarea"
+              name="comments"
+              class="form-control"
+              placeholder="Enter your comments here..."
+              data-testid="textarea-comments"
+              rows="5"
+            ></textarea>
+          </div>
+          <div class="flex gap-3">
+            <button id="btn-clear-textarea" name="clearTextarea" class="btn btn-secondary" data-testid="btn-clear-textarea" onclick="document.getElementById('txt-textarea').value=''">Clear</button>
+            <button id="btn-count-chars" name="countChars" class="btn btn-outline" data-testid="btn-count-chars" onclick="countChars()">Count Characters</button>
+            <span id="char-count-result" name="charCountResult" data-testid="char-count-result" class="text-muted" style="align-self:center"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Radio Buttons ──────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Radio Buttons</h3>
+          <span class="tag tag-purple">Scenario: select radio by value/label</span>
+        </div>
+        <div class="card-body grid grid-2">
+          <div>
+            <p class="text-muted mb-3">Select your gender:</p>
+            <div class="radio-group" id="radio-group-gender" data-testid="radio-group-gender">
+              <label class="radio-item">
+                <input id="radio-male" name="gender" type="radio" value="male" data-testid="radio-male" /> Male
+              </label>
+              <label class="radio-item">
+                <input id="radio-female" name="gender" type="radio" value="female" data-testid="radio-female" /> Female
+              </label>
+              <label class="radio-item">
+                <input id="radio-other" name="gender" type="radio" value="other" data-testid="radio-other" /> Prefer not to say
+              </label>
+            </div>
+          </div>
+          <div>
+            <p class="text-muted mb-3">Select experience level:</p>
+            <div class="radio-group" id="radio-group-level" data-testid="radio-group-level">
+              <label class="radio-item">
+                <input id="radio-junior" name="level" type="radio" value="junior" data-testid="radio-junior" /> Junior
+              </label>
+              <label class="radio-item">
+                <input id="radio-mid" name="level" type="radio" value="mid" data-testid="radio-mid" /> Mid-level
+              </label>
+              <label class="radio-item">
+                <input id="radio-senior" name="level" type="radio" value="senior" data-testid="radio-senior" /> Senior
+              </label>
+            </div>
+          </div>
+          <div class="mt-3">
+            <button id="btn-get-radio" name="getRadioValue" class="btn btn-secondary btn-sm" data-testid="btn-get-radio" onclick="getRadioValues()">Get Selected Values</button>
+            <span id="radio-result" name="radioResult" data-testid="radio-result" class="text-muted ml-2"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Checkboxes ─────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Checkboxes</h3>
+          <span class="tag tag-blue">Scenario: check, uncheck, assert checked state</span>
+        </div>
+        <div class="card-body grid grid-2">
+          <div>
+            <p class="text-muted mb-3">Select your skills:</p>
+            <div class="check-group" id="checkbox-group-skills" data-testid="checkbox-group-skills">
+              <label class="check-item"><input id="chk-selenium" name="skill" type="checkbox" value="selenium" data-testid="chk-selenium" /> Selenium</label>
+              <label class="check-item"><input id="chk-playwright" name="skill" type="checkbox" value="playwright" data-testid="chk-playwright" /> Playwright</label>
+              <label class="check-item"><input id="chk-cypress" name="skill" type="checkbox" value="cypress" data-testid="chk-cypress" checked /> Cypress</label>
+              <label class="check-item"><input id="chk-appium" name="skill" type="checkbox" value="appium" data-testid="chk-appium" /> Appium</label>
+              <label class="check-item"><input id="chk-restassured" name="skill" type="checkbox" value="restassured" data-testid="chk-restassured" /> Rest Assured</label>
+            </div>
+          </div>
+          <div>
+            <p class="text-muted mb-3">Preferences:</p>
+            <div class="check-group" id="checkbox-group-prefs" data-testid="checkbox-group-prefs">
+              <label class="check-item"><input id="chk-newsletter" name="pref" type="checkbox" value="newsletter" data-testid="chk-newsletter" checked /> Newsletter subscription</label>
+              <label class="check-item"><input id="chk-notifications" name="pref" type="checkbox" value="notifications" data-testid="chk-notifications" /> Email notifications</label>
+              <label class="check-item"><input id="chk-terms" name="pref" type="checkbox" value="terms" data-testid="chk-terms" required /> Accept terms &amp; conditions</label>
+            </div>
+          </div>
+          <div class="mt-3 flex gap-2">
+            <button id="btn-check-all" name="checkAll" class="btn btn-secondary btn-sm" data-testid="btn-check-all" onclick="setAllCheckboxes(true)">Check All</button>
+            <button id="btn-uncheck-all" name="uncheckAll" class="btn btn-secondary btn-sm" data-testid="btn-uncheck-all" onclick="setAllCheckboxes(false)">Uncheck All</button>
+            <button id="btn-get-checked" name="getChecked" class="btn btn-outline btn-sm" data-testid="btn-get-checked" onclick="getCheckedValues()">Get Checked</button>
+          </div>
+          <div><span id="checkbox-result" name="checkboxResult" data-testid="checkbox-result" class="text-muted"></span></div>
+        </div>
+      </div>
+
+      <!-- ── Dropdowns ──────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Dropdown Selects</h3>
+          <span class="tag tag-green">Scenario: select by value, text, index</span>
+        </div>
+        <div class="card-body grid grid-2">
+          <div class="form-group">
+            <label for="select-country">Country</label>
+            <select id="select-country" name="country" class="form-control" data-testid="select-country">
+              <option value="">-- Select Country --</option>
+              <option value="us">United States</option>
+              <option value="uk">United Kingdom</option>
+              <option value="ca">Canada</option>
+              <option value="au">Australia</option>
+              <option value="in">India</option>
+              <option value="de">Germany</option>
+              <option value="fr">France</option>
+              <option value="jp">Japan</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="select-role">User Role</label>
+            <select id="select-role" name="userRole" class="form-control" data-testid="select-role">
+              <option value="">-- Select Role --</option>
+              <option value="admin">Administrator</option>
+              <option value="manager">Manager</option>
+              <option value="user" selected>Standard User</option>
+              <option value="guest">Guest</option>
+            </select>
+          </div>
+          <!-- Multi-select -->
+          <div class="form-group">
+            <label for="select-multi">Multi-Select (hold Ctrl/Cmd)</label>
+            <select id="select-multi" name="languages" class="form-control" data-testid="select-multi" multiple size="6">
+              <option value="js">JavaScript</option>
+              <option value="python">Python</option>
+              <option value="java">Java</option>
+              <option value="cs">C#</option>
+              <option value="ruby">Ruby</option>
+              <option value="go">Go</option>
+              <option value="ts">TypeScript</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="select-fruit">Fruit Picker</label>
+            <select id="select-fruit" name="fruit" class="form-control" data-testid="select-fruit">
+              <optgroup label="Citrus">
+                <option value="orange">Orange</option>
+                <option value="lemon">Lemon</option>
+                <option value="lime">Lime</option>
+              </optgroup>
+              <optgroup label="Berries">
+                <option value="strawberry">Strawberry</option>
+                <option value="blueberry">Blueberry</option>
+                <option value="raspberry">Raspberry</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="mt-2">
+            <button id="btn-get-select" name="getSelectValue" class="btn btn-outline btn-sm" data-testid="btn-get-select" onclick="getSelectValues()">Get Selected Values</button>
+            <span id="select-result" name="selectResult" data-testid="select-result" class="text-muted mt-2" style="display:block"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Buttons ────────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Button Variants</h3>
+          <span class="tag tag-yellow">Scenario: click, double-click, right-click</span>
+        </div>
+        <div class="card-body">
+          <div class="flex flex-wrap gap-3 mb-3">
+            <button id="btn-primary" name="primaryBtn" class="btn btn-primary" data-testid="btn-primary" onclick="registerClick('primary')">Primary</button>
+            <button id="btn-secondary" name="secondaryBtn" class="btn btn-secondary" data-testid="btn-secondary" onclick="registerClick('secondary')">Secondary</button>
+            <button id="btn-success" name="successBtn" class="btn btn-success" data-testid="btn-success" onclick="registerClick('success')">Success</button>
+            <button id="btn-danger" name="dangerBtn" class="btn btn-danger" data-testid="btn-danger" onclick="registerClick('danger')">Danger</button>
+            <button id="btn-warning" name="warningBtn" class="btn btn-warning" data-testid="btn-warning" onclick="registerClick('warning')">Warning</button>
+            <button id="btn-info" name="infoBtn" class="btn btn-info" data-testid="btn-info" onclick="registerClick('info')">Info</button>
+            <button id="btn-outline-variant" name="outlineBtn" class="btn btn-outline" data-testid="btn-outline" onclick="registerClick('outline')">Outline</button>
+            <button id="btn-large" name="largeBtn" class="btn btn-primary btn-lg" data-testid="btn-large" onclick="registerClick('large')">Large</button>
+            <button id="btn-small" name="smallBtn" class="btn btn-secondary btn-sm" data-testid="btn-small" onclick="registerClick('small')">Small</button>
+          </div>
+          <!-- Double click & right click -->
+          <div class="flex gap-3 mb-3">
+            <button
+              id="btn-dblclick"
+              name="dblClickBtn"
+              class="btn btn-outline"
+              data-testid="btn-dblclick"
+              ondblclick="registerClick('double-click')"
+            >Double-Click Me</button>
+            <button
+              id="btn-rightclick"
+              name="rightClickBtn"
+              class="btn btn-outline"
+              data-testid="btn-rightclick"
+              oncontextmenu="event.preventDefault(); registerClick('right-click')"
+            >Right-Click Me</button>
+          </div>
+          <p id="btn-click-result" name="btnClickResult" data-testid="btn-click-result" class="text-muted"></p>
+        </div>
+      </div>
+
+      <!-- ── Disabled / Read-only / Hidden Fields ───────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Disabled, Read-only &amp; Hidden Fields</h3>
+          <span class="tag tag-red">Scenario: assert disabled state; reveal hidden</span>
+        </div>
+        <div class="card-body grid grid-2">
+          <div class="form-group">
+            <label for="txt-disabled">Disabled Input</label>
+            <input id="txt-disabled" name="disabledInput" type="text" class="form-control" value="Cannot edit this" disabled data-testid="input-disabled" />
+          </div>
+          <div class="form-group">
+            <label for="txt-readonly">Read-only Input</label>
+            <input id="txt-readonly" name="readonlyInput" type="text" class="form-control" value="Read-only value" readonly data-testid="input-readonly" />
+          </div>
+          <div class="form-group">
+            <label for="btn-disabled">Disabled Button</label>
+            <br/>
+            <button id="btn-disabled-btn" name="disabledBtn" class="btn btn-primary" disabled data-testid="btn-disabled">Disabled Button</button>
+          </div>
+          <div class="form-group">
+            <!-- Hidden input — useful for Selenium attribute assertions -->
+            <label>Hidden Input (invisible in UI)</label>
+            <input id="input-hidden" name="hiddenValue" type="hidden" value="secret-token-abc123" data-testid="input-hidden" />
+            <p class="text-muted">Hidden field: <code>id="input-hidden"</code> — value: <span id="hidden-value-display" data-testid="hidden-value-display">***</span></p>
+            <button id="btn-reveal-hidden" name="revealHidden" class="btn btn-secondary btn-sm mt-2" data-testid="btn-reveal-hidden" onclick="revealHidden()">Reveal Hidden Value</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Form Submit ────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Complete Form Submit</h3>
+          <span class="tag tag-blue">Scenario: fill complete form &amp; submit</span>
+        </div>
+        <div class="card-body">
+          <form id="form-complete" name="completeForm" data-testid="form-complete" onsubmit="submitForm(event)">
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label for="form-fname">First Name *</label>
+                <input id="form-fname" name="firstName" type="text" class="form-control" placeholder="First name" required data-testid="form-input-fname" />
+              </div>
+              <div class="form-group">
+                <label for="form-lname">Last Name *</label>
+                <input id="form-lname" name="lastName" type="text" class="form-control" placeholder="Last name" required data-testid="form-input-lname" />
+              </div>
+              <div class="form-group">
+                <label for="form-email">Email *</label>
+                <input id="form-email" name="formEmail" type="email" class="form-control" placeholder="email@example.com" required data-testid="form-input-email" />
+              </div>
+              <div class="form-group">
+                <label for="form-dept">Department</label>
+                <select id="form-dept" name="formDept" class="form-control" data-testid="form-select-dept">
+                  <option value="">-- Select --</option>
+                  <option value="eng">Engineering</option>
+                  <option value="qa">QA</option>
+                  <option value="pm">Product</option>
+                  <option value="design">Design</option>
+                </select>
+              </div>
+            </div>
+            <div id="form-error" name="formError" data-testid="form-error" class="alert alert-danger hidden"></div>
+            <div id="form-success" name="formSuccess" data-testid="form-success" class="alert alert-success hidden"></div>
+            <div class="flex gap-3 mt-3">
+              <button id="btn-form-submit" name="submitForm" type="submit" class="btn btn-primary" data-testid="btn-form-submit">Submit Form</button>
+              <button id="btn-form-reset" name="resetForm" type="reset" class="btn btn-secondary" data-testid="btn-form-reset">Reset</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/js/mock-api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    // ── toggle password visibility
+    function togglePassword() {
+      const inp = document.getElementById('txt-password');
+      const btn = document.getElementById('btn-toggle-password');
+      if (inp.type === 'password') { inp.type = 'text'; btn.textContent = '🙈 Hide'; }
+      else { inp.type = 'password'; btn.textContent = '👁 Show'; }
+    }
+
+    // ── count chars in textarea
+    function countChars() {
+      const val = document.getElementById('txt-textarea').value;
+      document.getElementById('char-count-result').textContent = `${val.length} characters`;
+    }
+
+    // ── get radio values
+    function getRadioValues() {
+      const g = document.querySelector('input[name="gender"]:checked');
+      const l = document.querySelector('input[name="level"]:checked');
+      document.getElementById('radio-result').textContent =
+        `Gender: ${g ? g.value : 'none'} | Level: ${l ? l.value : 'none'}`;
+    }
+
+    // ── checkbox helpers
+    function setAllCheckboxes(state) {
+      document.querySelectorAll('#checkbox-group-skills input[type=checkbox]').forEach(c => c.checked = state);
+    }
+    function getCheckedValues() {
+      const vals = [...document.querySelectorAll('input[name="skill"]:checked')].map(c => c.value);
+      document.getElementById('checkbox-result').textContent = vals.length ? vals.join(', ') : 'None checked';
+    }
+
+    // ── get select values
+    function getSelectValues() {
+      const country = document.getElementById('select-country').value;
+      const role    = document.getElementById('select-role').value;
+      const multi   = [...document.getElementById('select-multi').selectedOptions].map(o => o.value);
+      document.getElementById('select-result').textContent =
+        `Country: ${country || 'none'} | Role: ${role || 'none'} | Languages: ${multi.join(', ') || 'none'}`;
+    }
+
+    // ── button click register
+    function registerClick(type) {
+      const el = document.getElementById('btn-click-result');
+      el.textContent = `Registered: ${type} click at ${new Date().toLocaleTimeString()}`;
+      showToast(`${type} click detected!`, 'success', 2000);
+    }
+
+    // ── reveal hidden value
+    function revealHidden() {
+      const val = document.getElementById('input-hidden').value;
+      document.getElementById('hidden-value-display').textContent = val;
+      showToast('Hidden value revealed!', 'info');
+    }
+
+    // ── submit form
+    function submitForm(e) {
+      e.preventDefault();
+      const errEl = document.getElementById('form-error');
+      const okEl  = document.getElementById('form-success');
+      errEl.classList.add('hidden');
+      okEl.classList.add('hidden');
+
+      const fname = document.getElementById('form-fname').value.trim();
+      const lname = document.getElementById('form-lname').value.trim();
+      const email = document.getElementById('form-email').value.trim();
+
+      if (!fname || !lname || !email) {
+        errEl.textContent = '❌ Please fill in all required fields.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      okEl.textContent = `✅ Form submitted! Hello, ${fname} ${lname} (${email})`;
+      okEl.classList.remove('hidden');
+      showToast('Form submitted successfully!', 'success');
+    }
+  </script>
+</body>
+</html>

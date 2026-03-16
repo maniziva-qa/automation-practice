@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wait Scenarios — Automation Practice Lab</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    .timer-badge { font-size: 12px; background: #fef9c3; color: #a16207; padding: 2px 8px; border-radius: 10px; margin-left: 8px; font-weight: 700; }
+    .countdown { font-size: 22px; font-weight: 700; color: var(--primary); }
+  </style>
+</head>
+<body>
+  <nav class="sidebar" id="sidebar" data-testid="sidebar-nav">
+    <div class="sidebar-logo"><div class="logo-icon">🧪</div><span>APL</span></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Main</div>
+      <a href="/index.html" class="sidebar-link" data-testid="nav-home"><span class="icon">🏠</span> Dashboard Home</a>
+      <a href="/pages/dashboard.html" class="sidebar-link" data-testid="nav-dashboard"><span class="icon">📊</span> Analytics Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Form Testing</div>
+      <a href="/pages/basic-elements.html" class="sidebar-link" data-testid="nav-basic"><span class="icon">📝</span> Basic Elements</a>
+      <a href="/pages/advanced-elements.html" class="sidebar-link" data-testid="nav-advanced"><span class="icon">⚙️</span> Advanced Elements</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Table & Data</div>
+      <a href="/pages/tables.html" class="sidebar-link" data-testid="nav-tables"><span class="icon">📋</span> Table Practice</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">UI Interactions</div>
+      <a href="/pages/alerts-popups.html" class="sidebar-link" data-testid="nav-alerts"><span class="icon">🔔</span> Alerts & Popups</a>
+      <a href="/pages/frames-windows.html" class="sidebar-link" data-testid="nav-frames"><span class="icon">🪟</span> Frames & Windows</a>
+      <a href="/pages/wait-scenarios.html" class="sidebar-link active" data-testid="nav-waits"><span class="icon">⏱️</span> Wait Scenarios</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Auth & API</div>
+      <a href="/pages/auth.html" class="sidebar-link" data-testid="nav-auth"><span class="icon">🔐</span> Authentication</a>
+      <a href="/pages/api-playground.html" class="sidebar-link" data-testid="nav-api"><span class="icon">🔌</span> API Playground</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Advanced</div>
+      <a href="/pages/shadow-dom.html" class="sidebar-link" data-testid="nav-shadow"><span class="icon">👻</span> Shadow DOM</a>
+      <a href="/pages/complex-challenges.html" class="sidebar-link" data-testid="nav-complex"><span class="icon">🧩</span> Complex Challenges</a>
+    </div>
+      <div class="sidebar-footer" data-testid="sidebar-footer">
+        <span class="dev-label">Developed by</span>
+        <span class="dev-name" id="dev-name" data-testid="dev-name">Manikandan Adaikalam</span>
+        <span>Automation Practice Lab</span>
+      </div>
+  </nav>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-title">⏱️ Wait Scenarios</div>
+      <span class="topbar-badge tag-yellow">Explicit • Implicit • API • Spinner</span>
+    </header>
+
+    <main class="page-content">
+
+      <!-- ── Delayed Button ─────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Button Appears After Delay</h3><span class="tag tag-yellow">Scenario: waitForElement / waitUntil visible</span></div>
+        <div class="card-body">
+          <div class="alert alert-info mb-3">
+            <span>💡</span>
+            <div>
+              <strong>Selenium:</strong> <code>new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(btn));</code><br/>
+              <strong>Playwright:</strong> <code>await page.waitForSelector('#btn-delayed-5s');</code><br/>
+              <strong>Cypress:</strong> <code>cy.get('#btn-delayed-5s', &#123; timeout: 10000 &#125;).should('be.visible');</code>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-3 mb-3">
+            <button id="btn-trigger-2s" name="trigger2s" class="btn btn-primary btn-sm" data-testid="btn-trigger-2s" onclick="triggerDelayed(2000)">Trigger 2s delay</button>
+            <button id="btn-trigger-5s" name="trigger5s" class="btn btn-secondary btn-sm" data-testid="btn-trigger-5s" onclick="triggerDelayed(5000)">Trigger 5s delay</button>
+            <button id="btn-trigger-10s" name="trigger10s" class="btn btn-outline btn-sm" data-testid="btn-trigger-10s" onclick="triggerDelayed(10000)">Trigger 10s delay</button>
+          </div>
+
+          <div id="delayed-btn-container" data-testid="delayed-btn-container" style="min-height:60px; display:flex; align-items:center; gap:16px;">
+            <div id="delayed-spinner" data-testid="delayed-spinner" class="hidden">
+              <div class="spinner"></div>
+            </div>
+            <span id="delayed-countdown" data-testid="delayed-countdown" class="countdown hidden"></span>
+          </div>
+          <!-- The delayed button (initially hidden) — automation waits for this -->
+          <button
+            id="btn-delayed-5s"
+            name="delayedBtn"
+            class="btn btn-success hidden"
+            data-testid="btn-delayed-5s"
+            onclick="showToast('Delayed button was clicked!','success')"
+          >🎉 I appeared after the delay!</button>
+        </div>
+      </div>
+
+      <!-- ── Spinner / Loading ──────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Spinner Loading State</h3><span class="tag tag-blue">Scenario: waitForInvisibility of spinner, then assert content</span></div>
+        <div class="card-body">
+          <button id="btn-trigger-spinner" name="triggerSpinner" class="btn btn-primary btn-sm" data-testid="btn-trigger-spinner" onclick="triggerSpinnerLoad()">Simulate Loading</button>
+          <div id="spinner-container" data-testid="spinner-container" class="loading-overlay hidden">
+            <div class="spinner" id="loading-spinner" data-testid="loading-spinner"></div>
+            <span id="spinner-text" data-testid="spinner-text">Loading data, please wait...</span>
+          </div>
+          <div id="spinner-content" data-testid="spinner-content" class="hidden mt-3">
+            <div class="alert alert-success">
+              <span>✅</span>
+              <span id="loaded-content" data-testid="loaded-content">Data loaded successfully! Records found: <strong id="loaded-count" data-testid="loaded-count">0</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── API-triggered text ─────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Text Appears After API Call</h3><span class="tag tag-green">Scenario: wait for element text to change</span></div>
+        <div class="card-body">
+          <div class="form-group">
+            <label for="api-delay-select">Simulated API Response Delay</label>
+            <select id="api-delay-select" name="apiDelaySelect" class="form-control" style="max-width:200px" data-testid="api-delay-select">
+              <option value="1000">1 second</option>
+              <option value="3000" selected>3 seconds</option>
+              <option value="5000">5 seconds</option>
+              <option value="8000">8 seconds</option>
+            </select>
+          </div>
+          <button id="btn-fetch-users" name="fetchUsers" class="btn btn-primary btn-sm" data-testid="btn-fetch-users" onclick="fetchUsersWithDelay()">Fetch Users</button>
+          <div id="api-status" name="apiStatus" data-testid="api-status" class="text-muted mt-2">Status: <span id="api-status-text" data-testid="api-status-text">idle</span></div>
+          <div id="api-result-container" data-testid="api-result-container" class="hidden mt-3">
+            <div id="api-result" data-testid="api-result" class="code-box"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Element visibility toggle ─────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Element Visibility Toggle</h3><span class="tag tag-purple">Scenario: waitForVisible / waitForHidden</span></div>
+        <div class="card-body">
+          <div class="flex flex-wrap gap-3 mb-3">
+            <button id="btn-show-element" name="showElement" class="btn btn-success btn-sm" data-testid="btn-show-element" onclick="toggleVisibility(true)">Show Element</button>
+            <button id="btn-hide-element" name="hideElement" class="btn btn-secondary btn-sm" data-testid="btn-hide-element" onclick="toggleVisibility(false)">Hide Element</button>
+            <button id="btn-toggle-element" name="toggleElement" class="btn btn-outline btn-sm" data-testid="btn-toggle-element" onclick="toggleVisibility()">Toggle</button>
+          </div>
+          <!-- Element to appear/disappear — automation tool waits for it -->
+          <div id="visibility-target" name="visibilityTarget" data-testid="visibility-target" class="alert alert-success hidden">
+            👁️ I am now visible! Assert my text: "Visibility target is displayed"
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Sequential element reveal ─────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Sequential Reveal (Step-by-step)</h3><span class="tag tag-red">Scenario: wait for each step to complete before proceeding</span></div>
+        <div class="card-body">
+          <button id="btn-start-steps" name="startSteps" class="btn btn-primary btn-sm" data-testid="btn-start-steps" onclick="startSteps()">Start Steps</button>
+          <div class="mt-3" id="steps-container" data-testid="steps-container">
+            <div id="step-1" data-testid="step-1" class="hidden" style="padding:8px 0; display:none; align-items:center; gap:8px;">
+              <span id="step-1-icon" data-testid="step-1-icon">⏳</span>
+              <span>Step 1: Authenticating user...</span>
+              <span id="step-1-status" data-testid="step-1-status" class="text-muted"></span>
+            </div>
+            <div id="step-2" data-testid="step-2" class="hidden" style="padding:8px 0; display:none; align-items:center; gap:8px;">
+              <span id="step-2-icon" data-testid="step-2-icon">⏳</span>
+              <span>Step 2: Loading profile data...</span>
+              <span id="step-2-status" data-testid="step-2-status" class="text-muted"></span>
+            </div>
+            <div id="step-3" data-testid="step-3" class="hidden" style="padding:8px 0; display:none; align-items:center; gap:8px;">
+              <span id="step-3-icon" data-testid="step-3-icon">⏳</span>
+              <span>Step 3: Setting up workspace...</span>
+              <span id="step-3-status" data-testid="step-3-status" class="text-muted"></span>
+            </div>
+            <div id="steps-complete" data-testid="steps-complete" class="hidden alert alert-success mt-2">
+              ✅ All steps completed! Ready to proceed.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/js/mock-api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    // ── Delayed button
+    function triggerDelayed(ms) {
+      const spinner   = document.getElementById('delayed-spinner');
+      const countdown = document.getElementById('delayed-countdown');
+      const btn       = document.getElementById('btn-delayed-5s');
+      btn.classList.add('hidden');
+      spinner.classList.remove('hidden');
+      countdown.classList.remove('hidden');
+      let remaining = Math.round(ms / 1000);
+      countdown.textContent = remaining + 's';
+      const tick = setInterval(() => {
+        remaining--;
+        countdown.textContent = remaining > 0 ? remaining + 's' : '0s';
+        if (remaining <= 0) clearInterval(tick);
+      }, 1000);
+      setTimeout(() => {
+        spinner.classList.add('hidden');
+        countdown.classList.add('hidden');
+        btn.classList.remove('hidden');
+      }, ms);
+    }
+
+    // ── Spinner load
+    function triggerSpinnerLoad() {
+      const spinner  = document.getElementById('spinner-container');
+      const content  = document.getElementById('spinner-content');
+      content.classList.add('hidden');
+      spinner.classList.remove('hidden');
+      const delay = 1500 + Math.random() * 2000;
+      setTimeout(() => {
+        spinner.classList.add('hidden');
+        document.getElementById('loaded-count').textContent = Math.floor(Math.random() * 100) + 1;
+        content.classList.remove('hidden');
+      }, delay);
+    }
+
+    // ── API delayed fetch
+    async function fetchUsersWithDelay() {
+      const delay  = document.getElementById('api-delay-select').value;
+      const status = document.getElementById('api-status-text');
+      const result = document.getElementById('api-result');
+      const container = document.getElementById('api-result-container');
+      status.textContent = 'loading...';
+      container.classList.add('hidden');
+      document.getElementById('btn-fetch-users').disabled = true;
+      try {
+        const res  = await fetch(`/api/users?delay=${delay}`);
+        const json = await res.json();
+        status.textContent = `done (${delay}ms delay)`;
+        result.textContent = JSON.stringify(json, null, 2);
+        container.classList.remove('hidden');
+      } catch(e) {
+        status.textContent = 'error';
+      } finally {
+        document.getElementById('btn-fetch-users').disabled = false;
+      }
+    }
+
+    // ── Visibility toggle
+    let visible = false;
+    function toggleVisibility(force) {
+      const el = document.getElementById('visibility-target');
+      if (force === undefined) visible = !visible;
+      else visible = force;
+      el.classList.toggle('hidden', !visible);
+      el.style.display = visible ? 'flex' : '';
+    }
+
+    // ── Sequential steps
+    async function startSteps() {
+      document.getElementById('btn-start-steps').disabled = true;
+      document.getElementById('steps-complete').classList.add('hidden');
+      const steps = [1, 2, 3];
+      for (const s of steps) {
+        const el = document.getElementById(`step-${s}`);
+        el.style.display = 'flex';
+        el.classList.remove('hidden');
+        await new Promise(r => setTimeout(r, 1200 + Math.random() * 1000));
+        document.getElementById(`step-${s}-icon`).textContent = '✅';
+        document.getElementById(`step-${s}-status`).textContent = 'Complete';
+      }
+      document.getElementById('steps-complete').classList.remove('hidden');
+      document.getElementById('btn-start-steps').disabled = false;
+    }
+  </script>
+</body>
+</html>

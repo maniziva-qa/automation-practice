@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>iFrame Content</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; background: #f0f9ff; padding: 20px; color: #1e293b; }
+    h4 { color: #2563eb; margin-bottom: 12px; font-size: 15px; }
+    input { padding: 7px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; width: 100%; margin-bottom: 10px; box-sizing: border-box; }
+    button { padding: 8px 18px; background: #2563eb; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; }
+    button:hover { background: #1d4ed8; }
+    .result { margin-top: 10px; font-size: 13px; color: #16a34a; font-weight: 600; }
+    .msg-box { margin-top: 12px; padding: 10px; background: #fef9c3; border-radius: 6px; font-size: 13px; display: none; }
+  </style>
+</head>
+<body>
+  <h4>📦 iFrame Content Area</h4>
+  <p style="font-size:13px; color:#64748b; margin-bottom:12px;">This content is inside an &lt;iframe&gt;. Switch to this frame to interact.</p>
+  <input id="iframe-input-name" name="iframeName" type="text" placeholder="Type your name inside the iframe" data-testid="iframe-input-name" />
+  <button id="iframe-btn-submit" name="iframeBtnSubmit" data-testid="iframe-btn-submit" onclick="submitIframe()">Submit</button>
+  <div class="result" id="iframe-result" data-testid="iframe-result"></div>
+  <div class="msg-box" id="msg-box" data-testid="iframe-msg-box"></div>
+
+  <script>
+    function submitIframe() {
+      const val = document.getElementById('iframe-input-name').value;
+      document.getElementById('iframe-result').textContent = val ? `Hello, ${val}! (from inside iframe)` : 'Please enter a name.';
+    }
+    // Listen for postMessage from parent
+    window.addEventListener('message', (e) => {
+      if (e.data && e.data.type === 'PARENT_MSG') {
+        const box = document.getElementById('msg-box');
+        box.textContent = `📩 Parent says: "${e.data.text}"`;
+        box.style.display = 'block';
+        // Reply back
+        window.parent.postMessage({ type: 'FRAME_REPLY', text: 'Got it! ' + e.data.text }, '*');
+      }
+    });
+  </script>
+</body>
+</html>

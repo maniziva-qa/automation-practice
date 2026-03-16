@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shadow DOM — Automation Practice Lab</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <nav class="sidebar" id="sidebar" data-testid="sidebar-nav">
+    <div class="sidebar-logo"><div class="logo-icon">🧪</div><span>APL</span></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Main</div>
+      <a href="/index.html" class="sidebar-link" data-testid="nav-home"><span class="icon">🏠</span> Dashboard Home</a>
+      <a href="/pages/dashboard.html" class="sidebar-link" data-testid="nav-dashboard"><span class="icon">📊</span> Analytics Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Form Testing</div>
+      <a href="/pages/basic-elements.html" class="sidebar-link" data-testid="nav-basic"><span class="icon">📝</span> Basic Elements</a>
+      <a href="/pages/advanced-elements.html" class="sidebar-link" data-testid="nav-advanced"><span class="icon">⚙️</span> Advanced Elements</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Table & Data</div>
+      <a href="/pages/tables.html" class="sidebar-link" data-testid="nav-tables"><span class="icon">📋</span> Table Practice</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">UI Interactions</div>
+      <a href="/pages/alerts-popups.html" class="sidebar-link" data-testid="nav-alerts"><span class="icon">🔔</span> Alerts & Popups</a>
+      <a href="/pages/frames-windows.html" class="sidebar-link" data-testid="nav-frames"><span class="icon">🪟</span> Frames & Windows</a>
+      <a href="/pages/wait-scenarios.html" class="sidebar-link" data-testid="nav-waits"><span class="icon">⏱️</span> Wait Scenarios</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Auth & API</div>
+      <a href="/pages/auth.html" class="sidebar-link" data-testid="nav-auth"><span class="icon">🔐</span> Authentication</a>
+      <a href="/pages/api-playground.html" class="sidebar-link" data-testid="nav-api"><span class="icon">🔌</span> API Playground</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Advanced</div>
+      <a href="/pages/shadow-dom.html" class="sidebar-link active" data-testid="nav-shadow"><span class="icon">👻</span> Shadow DOM</a>
+      <a href="/pages/complex-challenges.html" class="sidebar-link" data-testid="nav-complex"><span class="icon">🧩</span> Complex Challenges</a>
+    </div>
+      <div class="sidebar-footer" data-testid="sidebar-footer">
+        <span class="dev-label">Developed by</span>
+        <span class="dev-name" id="dev-name" data-testid="dev-name">Manikandan Adaikalam</span>
+        <span>Automation Practice Lab</span>
+      </div>
+  </nav>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-title">👻 Shadow DOM</div>
+      <span class="topbar-badge tag-purple">Web Components • Encapsulated DOM</span>
+    </header>
+
+    <main class="page-content">
+
+      <!-- ── Intro ───────────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>What is Shadow DOM?</h3></div>
+        <div class="card-body">
+          <p class="text-muted">Shadow DOM creates an encapsulated DOM tree attached to an element, hidden from the regular document DOM. Standard <code>document.querySelector()</code> cannot reach inside it.</p>
+          <div class="alert alert-info mt-3">
+            <span>💡</span>
+            <div>
+              <strong>Selenium:</strong> Use <code>JavascriptExecutor</code> to pierce shadow roots.<br/>
+              <code>((JavascriptExecutor) driver).executeScript("return arguments[0].shadowRoot.querySelector('#shadow-input')", host);</code><br/><br/>
+              <strong>Playwright:</strong> Supports shadow DOM natively via <code>page.locator('shadow-login-form >> #shadow-input')</code> or <code>&gt;&gt;</code> combinator.<br/>
+              <strong>Cypress:</strong> Use <code>.shadow()</code> command: <code>cy.get('shadow-login-form').shadow().find('#shadow-input')</code>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Single Shadow Host ─────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Shadow Login Form</h3><span class="tag tag-purple">Web Component: &lt;shadow-login-form&gt;</span></div>
+        <div class="card-body">
+          <p class="text-muted mb-3">The form below is rendered entirely inside a Shadow DOM. Regular CSS selectors cannot target its elements.</p>
+          <div id="shadow-host-wrapper">
+            <!-- Shadow host element — JS attaches shadow root to this -->
+            <shadow-login-form id="shadow-login-form" data-testid="shadow-login-form"></shadow-login-form>
+          </div>
+          <div id="shadow-form-result" data-testid="shadow-form-result" class="text-muted mt-3"></div>
+        </div>
+      </div>
+
+      <!-- ── Shadow Counter Widget ──────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Shadow Counter Widget</h3><span class="tag tag-blue">Web Component: &lt;shadow-counter&gt;</span></div>
+        <div class="card-body">
+          <p class="text-muted mb-3">A counter widget inside shadow DOM. Automation must pierce the shadow root to click the buttons.</p>
+          <shadow-counter id="shadow-counter-1" data-testid="shadow-counter-1" start="0"></shadow-counter>
+        </div>
+      </div>
+
+      <!-- ── Nested Shadow DOM ───────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Nested Shadow DOM</h3><span class="tag tag-red">Challenge: 2 levels deep</span></div>
+        <div class="card-body">
+          <p class="text-muted mb-3">This component has a shadow root that contains another component with its own shadow root — two levels deep.</p>
+          <shadow-outer id="shadow-outer" data-testid="shadow-outer"></shadow-outer>
+          <div id="nested-shadow-result" data-testid="nested-shadow-result" class="text-muted mt-3"></div>
+        </div>
+      </div>
+
+      <!-- ── JS Access Demo ─────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>JavaScript Shadow DOM Access</h3><span class="tag tag-yellow">Automation code examples</span></div>
+        <div class="card-body">
+          <div class="flex gap-3 mb-3 flex-wrap">
+            <button id="btn-shadow-read" name="shadowRead" class="btn btn-primary btn-sm" data-testid="btn-shadow-read" onclick="readShadowInput()">Read Shadow Input Value</button>
+            <button id="btn-shadow-write" name="shadowWrite" class="btn btn-secondary btn-sm" data-testid="btn-shadow-write" onclick="writeShadowInput()">Write to Shadow Input</button>
+            <button id="btn-shadow-click" name="shadowClick" class="btn btn-outline btn-sm" data-testid="btn-shadow-click" onclick="clickShadowBtn()">Click Shadow Button</button>
+          </div>
+          <p id="shadow-js-result" data-testid="shadow-js-result" class="text-muted"></p>
+          <div class="code-box mt-3">// Playwright example:
+const shadowInput = page.locator('shadow-login-form').locator('#shadow-input-username');
+await shadowInput.fill('admin');
+
+// Selenium (Java) example:
+WebElement host = driver.findElement(By.tagName("shadow-login-form"));
+SearchContext root = host.getShadowRoot();
+WebElement input = root.findElement(By.id("shadow-input-username"));</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/js/mock-api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    // ── Define <shadow-login-form> Web Component
+    class ShadowLoginForm extends HTMLElement {
+      connectedCallback() {
+        const shadow = this.attachShadow({ mode: 'open' });
+        shadow.innerHTML = `
+          <style>
+            :host { display: block; }
+            .form-wrap { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 20px; font-family: sans-serif; }
+            label { display: block; font-size: 13px; color: #0369a1; margin-bottom: 4px; font-weight: 600; }
+            input { width: 100%; padding: 8px 12px; border: 1px solid #bae6fd; border-radius: 6px; font-size: 14px; margin-bottom: 12px; box-sizing: border-box; }
+            button { padding: 9px 20px; background: #0284c7; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
+            button:hover { background: #0369a1; }
+            .result { margin-top: 10px; font-size: 13px; color: #16a34a; font-weight: 600; }
+            .shadow-label { background: #e0f2fe; color: #0369a1; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 12px; display: inline-block; }
+          </style>
+          <div class="form-wrap">
+            <span class="shadow-label">SHADOW DOM</span>
+            <label for="shadow-input-username">Username</label>
+            <input id="shadow-input-username" name="shadowUsername" type="text" placeholder="Enter username" data-testid="shadow-input-username" />
+            <label for="shadow-input-password">Password</label>
+            <input id="shadow-input-password" name="shadowPassword" type="password" placeholder="Enter password" data-testid="shadow-input-password" />
+            <button id="shadow-btn-login" data-testid="shadow-btn-login">Sign In (Shadow)</button>
+            <div class="result" id="shadow-login-result" data-testid="shadow-login-result"></div>
+          </div>`;
+        shadow.querySelector('#shadow-btn-login').addEventListener('click', () => {
+          const user = shadow.querySelector('#shadow-input-username').value;
+          const pass = shadow.querySelector('#shadow-input-password').value;
+          shadow.querySelector('#shadow-login-result').textContent =
+            user ? `Submitted: ${user} / ${pass ? '***' : '(no password)'}` : 'Please enter credentials';
+          document.getElementById('shadow-form-result').textContent = `Shadow form submitted with user: "${user}"`;
+        });
+      }
+    }
+    customElements.define('shadow-login-form', ShadowLoginForm);
+
+    // ── Define <shadow-counter> Web Component
+    class ShadowCounter extends HTMLElement {
+      constructor() {
+        super();
+        this._count = parseInt(this.getAttribute('start') || '0');
+      }
+      connectedCallback() {
+        const shadow = this.attachShadow({ mode: 'open' });
+        this._render(shadow);
+      }
+      _render(shadow) {
+        shadow.innerHTML = `
+          <style>
+            :host { display: inline-block; }
+            .counter-wrap { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 8px; font-family: sans-serif; }
+            .count-display { font-size: 32px; font-weight: 700; color: #7c3aed; min-width: 50px; text-align: center; }
+            button { padding: 8px 18px; border: none; border-radius: 6px; font-size: 18px; font-weight: 700; cursor: pointer; }
+            #shadow-btn-decrement { background: #ede9fe; color: #7c3aed; }
+            #shadow-btn-increment { background: #7c3aed; color: #fff; }
+            #shadow-btn-reset     { background: #f1f5f9; color: #64748b; font-size: 13px; padding: 6px 12px; }
+            .shadow-label { background: #ede9fe; color: #7c3aed; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 8px; display: block; }
+          </style>
+          <div>
+            <span class="shadow-label">SHADOW DOM</span>
+            <div class="counter-wrap">
+              <button id="shadow-btn-decrement" data-testid="shadow-btn-decrement">−</button>
+              <span class="count-display" id="shadow-count-display" data-testid="shadow-count-display">${this._count}</span>
+              <button id="shadow-btn-increment" data-testid="shadow-btn-increment">+</button>
+              <button id="shadow-btn-reset" data-testid="shadow-btn-reset">Reset</button>
+            </div>
+          </div>`;
+        const display = shadow.querySelector('#shadow-count-display');
+        shadow.querySelector('#shadow-btn-increment').onclick = () => { this._count++; display.textContent = this._count; };
+        shadow.querySelector('#shadow-btn-decrement').onclick = () => { this._count--; display.textContent = this._count; };
+        shadow.querySelector('#shadow-btn-reset').onclick     = () => { this._count = 0; display.textContent = 0; };
+      }
+    }
+    customElements.define('shadow-counter', ShadowCounter);
+
+    // ── Define <shadow-outer> — contains an inner shadow component
+    class ShadowOuter extends HTMLElement {
+      connectedCallback() {
+        const outerShadow = this.attachShadow({ mode: 'open' });
+        outerShadow.innerHTML = `
+          <style>
+            :host { display: block; }
+            .outer-wrap { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 8px; padding: 16px; font-family: sans-serif; }
+            .outer-label { background: #fed7aa; color: #c2410c; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 10px; display: inline-block; }
+            input { padding: 7px 10px; border: 1px solid #fed7aa; border-radius: 5px; font-size: 13px; width: 90%; margin-bottom: 10px; display: block; }
+          </style>
+          <div class="outer-wrap">
+            <span class="outer-label">OUTER SHADOW</span>
+            <input id="shadow-outer-input" data-testid="shadow-outer-input" type="text" placeholder="Outer shadow input" />
+            <shadow-inner-component id="shadow-inner-host" data-testid="shadow-inner-host"></shadow-inner-component>
+          </div>`;
+        // Define inner shadow inside outer shadow
+        class ShadowInner extends HTMLElement {
+          connectedCallback() {
+            const innerShadow = this.attachShadow({ mode: 'open' });
+            innerShadow.innerHTML = `
+              <style>
+                :host { display: block; margin-top: 10px; }
+                .inner-wrap { background: #ffe4e6; border: 1px solid #fecdd3; border-radius: 6px; padding: 12px; font-family: sans-serif; font-size: 13px; }
+                .inner-label { background: #fecdd3; color: #be123c; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700; margin-bottom: 8px; display: inline-block; }
+                button { padding: 6px 14px; background: #be123c; color: #fff; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; }
+              </style>
+              <div class="inner-wrap">
+                <span class="inner-label">INNER SHADOW (level 2)</span>
+                <p>You are 2 shadow roots deep!</p>
+                <button id="shadow-inner-btn" data-testid="shadow-inner-btn">Click Inner Button</button>
+                <span id="shadow-inner-result" data-testid="shadow-inner-result"></span>
+              </div>`;
+            innerShadow.querySelector('#shadow-inner-btn').onclick = () => {
+              innerShadow.querySelector('#shadow-inner-result').textContent = ' ✅ clicked!';
+              document.getElementById('nested-shadow-result').textContent = 'Inner shadow button clicked (2 levels deep)!';
+            };
+          }
+        }
+        if (!customElements.get('shadow-inner-component')) {
+          customElements.define('shadow-inner-component', ShadowInner);
+        }
+      }
+    }
+    customElements.define('shadow-outer', ShadowOuter);
+
+    // ── JS helpers for the demo buttons
+    function getShadowHost() {
+      return document.querySelector('shadow-login-form').shadowRoot;
+    }
+    function readShadowInput() {
+      const val = getShadowHost().querySelector('#shadow-input-username').value;
+      document.getElementById('shadow-js-result').textContent = `Shadow username value: "${val || '(empty)'}"`;
+    }
+    function writeShadowInput() {
+      getShadowHost().querySelector('#shadow-input-username').value = 'automation_test_user';
+      document.getElementById('shadow-js-result').textContent = 'Wrote "automation_test_user" to shadow input.';
+    }
+    function clickShadowBtn() {
+      getShadowHost().querySelector('#shadow-btn-login').click();
+      document.getElementById('shadow-js-result').textContent = 'Clicked shadow login button.';
+    }
+  </script>
+</body>
+</html>

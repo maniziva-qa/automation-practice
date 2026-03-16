@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Authentication — Automation Practice Lab</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <!-- Login page — full screen, no sidebar -->
+  <div class="login-page" id="login-page" data-testid="login-page">
+    <div class="login-box" id="login-box" data-testid="login-box">
+      <div class="login-logo">🧪 <span>Automation</span> Lab</div>
+      <p style="text-align:center; color:#64748b; font-size:13px; margin-bottom:24px;">Sign in to access the practice lab</p>
+
+      <form id="login-form" name="loginForm" data-testid="login-form" onsubmit="handleLogin(event)">
+
+        <div class="form-group">
+          <label for="login-username">Username</label>
+          <input
+            id="login-username"
+            name="username"
+            type="text"
+            class="form-control"
+            placeholder="admin / user / locked / testuser"
+            data-testid="login-username"
+            autocomplete="username"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <div class="flex gap-2 items-center">
+            <input
+              id="login-password"
+              name="password"
+              type="password"
+              class="form-control"
+              placeholder="Enter your password"
+              data-testid="login-password"
+              autocomplete="current-password"
+              required
+            />
+            <button type="button" id="btn-show-pass" name="showPass" class="btn btn-secondary btn-sm" data-testid="btn-show-pass" onclick="toggleLoginPwd()" style="white-space:nowrap">Show</button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:4px;">
+          <label class="check-item" style="font-size:13px;">
+            <input id="chk-remember" name="rememberMe" type="checkbox" data-testid="chk-remember" />
+            Remember me
+          </label>
+        </div>
+
+        <!-- Error / success messages -->
+        <div id="login-error" name="loginError" data-testid="login-error" class="alert alert-danger hidden" role="alert"></div>
+        <div id="login-success" name="loginSuccess" data-testid="login-success" class="alert alert-success hidden" role="alert"></div>
+
+        <button
+          id="btn-login"
+          name="loginBtn"
+          type="submit"
+          class="btn btn-primary w-full mt-2"
+          data-testid="btn-login"
+          style="justify-content:center"
+        >
+          <span id="login-btn-text" data-testid="login-btn-text">Sign In</span>
+          <span id="login-spinner" data-testid="login-spinner" class="hidden" style="width:16px;height:16px;border-width:2px;border-radius:50%;border-style:solid;border-color:#fff transparent transparent transparent;animation:spin .7s linear infinite;display:inline-block;"></span>
+        </button>
+      </form>
+
+      <hr/>
+
+      <!-- Quick-fill test credentials -->
+      <p style="text-align:center; font-size:12px; color:#64748b; margin-bottom:10px;">Quick-fill test scenarios:</p>
+      <div class="flex flex-wrap gap-2" style="justify-content:center;">
+        <button id="btn-fill-admin" name="fillAdmin" class="btn btn-secondary btn-sm" data-testid="btn-fill-admin" onclick="fillCreds('admin','admin123')">Admin</button>
+        <button id="btn-fill-user" name="fillUser" class="btn btn-secondary btn-sm" data-testid="btn-fill-user" onclick="fillCreds('user','user123')">User</button>
+        <button id="btn-fill-locked" name="fillLocked" class="btn btn-secondary btn-sm" data-testid="btn-fill-locked" onclick="fillCreds('locked','locked123')">Locked</button>
+        <button id="btn-fill-invalid" name="fillInvalid" class="btn btn-secondary btn-sm" data-testid="btn-fill-invalid" onclick="fillCreds('nobody','wrong')">Invalid</button>
+      </div>
+
+      <p style="text-align:center; margin-top:16px; font-size:12px; color:#64748b;">
+        <a href="/index.html" id="link-back" data-testid="link-back" style="color:var(--primary)">← Back to Home</a>
+      <p style="margin-top:20px; font-size:11px; color:#94a3b8; text-align:center;">Developed by <strong style="color:#60a5fa" id="auth-dev-credit" data-testid="auth-dev-credit">Manikandan Adaikalam</strong></p>
+      </p>
+    </div>
+  </div>
+
+  <!-- ── Dashboard shown after successful login ───────────── -->
+  <div id="dashboard-page" data-testid="dashboard-page" class="hidden" style="min-height:100vh; background:var(--bg);">
+    <nav class="sidebar" data-testid="sidebar-nav">
+      <div class="sidebar-logo"><div class="logo-icon">🧪</div><span>APL</span></div>
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Main</div>
+        <a href="/index.html" class="sidebar-link" data-testid="nav-home"><span class="icon">🏠</span> Dashboard Home</a>
+      </div>
+      <div class="sidebar-section" style="position:absolute; bottom:20px; width:100%;">
+        <button id="btn-logout" name="logoutBtn" class="sidebar-link" data-testid="btn-logout" style="width:100%; border:none; background:none; cursor:pointer; color:#ef4444;" onclick="doLogout()">
+          <span class="icon">🚪</span> Logout
+        </button>
+      </div>
+    </nav>
+    <div style="margin-left:260px; padding:40px;">
+      <div style="max-width:600px;">
+        <h2 id="welcome-msg" data-testid="welcome-msg" style="font-size:22px; font-weight:700; margin-bottom:8px;">Welcome back!</h2>
+        <p id="session-info" data-testid="session-info" class="text-muted mb-4"></p>
+        <div class="card">
+          <div class="card-header"><h3>Session Details</h3></div>
+          <div class="card-body">
+            <div class="grid grid-2">
+              <div><strong>Logged in as:</strong><br/><span id="session-username" data-testid="session-username" class="badge badge-active"></span></div>
+              <div><strong>Role:</strong><br/><span id="session-role" data-testid="session-role" class="badge badge-admin"></span></div>
+              <div><strong>Token:</strong><br/><span id="session-token" data-testid="session-token" style="font-family:monospace; font-size:12px;"></span></div>
+              <div><strong>Session expires:</strong><br/><span id="session-timer" data-testid="session-timer" style="font-weight:700; color:var(--warning);"></span></div>
+            </div>
+          </div>
+        </div>
+        <div class="card mt-4">
+          <div class="card-body">
+            <button id="btn-logout-main" name="logoutMain" class="btn btn-danger" data-testid="btn-logout-main" onclick="doLogout()">🚪 Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/js/mock-api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    let sessionTimer = null;
+    let sessionSeconds = 120; // 2 min simulated session
+
+    function toggleLoginPwd() {
+      const inp = document.getElementById('login-password');
+      const btn = document.getElementById('btn-show-pass');
+      if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'Hide'; }
+      else { inp.type = 'password'; btn.textContent = 'Show'; }
+    }
+
+    function fillCreds(user, pass) {
+      document.getElementById('login-username').value = user;
+      document.getElementById('login-password').value = pass;
+      // Clear previous messages
+      document.getElementById('login-error').classList.add('hidden');
+      document.getElementById('login-success').classList.add('hidden');
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value;
+      const errEl    = document.getElementById('login-error');
+      const okEl     = document.getElementById('login-success');
+      const btn      = document.getElementById('btn-login');
+      const btnText  = document.getElementById('login-btn-text');
+      const spinner  = document.getElementById('login-spinner');
+
+      errEl.classList.add('hidden');
+      okEl.classList.add('hidden');
+      btn.disabled  = true;
+      spinner.classList.remove('hidden');
+      btnText.textContent = 'Signing in...';
+
+      try {
+        const res  = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const json = await res.json();
+
+        if (!res.ok) {
+          errEl.textContent = `❌ ${json.message}`;
+          errEl.classList.remove('hidden');
+          // Add visual feedback to inputs
+          document.getElementById('login-username').classList.add('input-error');
+          document.getElementById('login-password').classList.add('input-error');
+        } else {
+          okEl.textContent = `✅ ${json.message}`;
+          okEl.classList.remove('hidden');
+          document.getElementById('login-username').classList.remove('input-error');
+          document.getElementById('login-password').classList.remove('input-error');
+          // Show dashboard after small delay
+          setTimeout(() => showDashboard(json), 700);
+        }
+      } catch(err) {
+        errEl.textContent = '❌ Network error. Is the server running?';
+        errEl.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        spinner.classList.add('hidden');
+        btnText.textContent = 'Sign In';
+      }
+    }
+
+    function showDashboard(data) {
+      document.getElementById('login-page').classList.add('hidden');
+      document.getElementById('dashboard-page').classList.remove('hidden');
+      document.getElementById('welcome-msg').textContent = `Welcome, ${data.user.username}! 👋`;
+      document.getElementById('session-info').textContent = `Logged in at ${new Date().toLocaleTimeString()}`;
+      document.getElementById('session-username').textContent = data.user.username;
+      document.getElementById('session-role').textContent = data.user.role;
+      document.getElementById('session-token').textContent = data.token;
+      // Session countdown
+      sessionSeconds = 120;
+      updateTimer();
+      sessionTimer = setInterval(() => {
+        sessionSeconds--;
+        updateTimer();
+        if (sessionSeconds <= 0) {
+          clearInterval(sessionTimer);
+          showToast('⚠️ Session expired! Please login again.', 'warning', 6000);
+          setTimeout(doLogout, 3000);
+        }
+      }, 1000);
+    }
+
+    function updateTimer() {
+      const m = Math.floor(sessionSeconds / 60);
+      const s = sessionSeconds % 60;
+      document.getElementById('session-timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
+    }
+
+    function doLogout() {
+      if (sessionTimer) clearInterval(sessionTimer);
+      document.getElementById('dashboard-page').classList.add('hidden');
+      document.getElementById('login-page').classList.remove('hidden');
+      document.getElementById('login-form').reset();
+      document.getElementById('login-error').classList.add('hidden');
+      document.getElementById('login-success').classList.add('hidden');
+      showToast('Logged out successfully.', 'info');
+    }
+  </script>
+</body>
+</html>

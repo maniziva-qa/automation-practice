@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "name": "Alice Johnson",
+    "email": "alice@example.com",
+    "role": "Admin",
+    "status": "active",
+    "age": 32,
+    "department": "Engineering"
+  },
+  {
+    "id": "2",
+    "name": "Bob Smith",
+    "email": "bob@example.com",
+    "role": "User",
+    "status": "active",
+    "age": 28,
+    "department": "Marketing"
+  },
+  {
+    "id": "3",
+    "name": "Carol White",
+    "email": "carol@example.com",
+    "role": "Manager",
+    "status": "inactive",
+    "age": 45,
+    "department": "HR"
+  },
+  {
+    "id": "4",
+    "name": "David Lee",
+    "email": "david@example.com",
+    "role": "User",
+    "status": "active",
+    "age": 35,
+    "department": "Finance"
+  },
+  {
+    "id": "5",
+    "name": "Eva Martinez",
+    "email": "eva@example.com",
+    "role": "User",
+    "status": "locked",
+    "age": 29,
+    "department": "Engineering"
+  }
+]
