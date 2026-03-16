@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/automation-practice/">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Playground — Automation Practice Lab</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    .method-badge { padding: 3px 10px; border-radius: 4px; font-size: 12px; font-weight: 700; font-family: monospace; }
+    .method-get    { background:#dcfce7; color:#15803d; }
+    .method-post   { background:#dbeafe; color:#1d4ed8; }
+    .method-put    { background:#fef9c3; color:#a16207; }
+    .method-delete { background:#fee2e2; color:#b91c1c; }
+    .endpoint-row { display:flex; align-items:center; gap:10px; background:#f8fafc; padding:10px 14px; border-radius:6px; border:1px solid var(--border); margin-bottom:8px; }
+    .endpoint-path { font-family:monospace; font-size:13px; }
+    .response-status { padding:3px 10px; border-radius:4px; font-size:12px; font-weight:700; }
+    .status-2xx { background:#dcfce7; color:#15803d; }
+    .status-4xx { background:#fef9c3; color:#a16207; }
+    .status-5xx { background:#fee2e2; color:#b91c1c; }
+  </style>
+</head>
+<body>
+  <nav class="sidebar" id="sidebar" data-testid="sidebar-nav">
+    <div class="sidebar-logo"><div class="logo-icon">🧪</div><span>APL</span></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Main</div>
+      <a href="/index.html" class="sidebar-link" data-testid="nav-home"><span class="icon">🏠</span> Dashboard Home</a>
+      <a href="/pages/dashboard.html" class="sidebar-link" data-testid="nav-dashboard"><span class="icon">📊</span> Analytics Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Form Testing</div>
+      <a href="/pages/basic-elements.html" class="sidebar-link" data-testid="nav-basic"><span class="icon">📝</span> Basic Elements</a>
+      <a href="/pages/advanced-elements.html" class="sidebar-link" data-testid="nav-advanced"><span class="icon">⚙️</span> Advanced Elements</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Table & Data</div>
+      <a href="/pages/tables.html" class="sidebar-link" data-testid="nav-tables"><span class="icon">📋</span> Table Practice</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">UI Interactions</div>
+      <a href="/pages/alerts-popups.html" class="sidebar-link" data-testid="nav-alerts"><span class="icon">🔔</span> Alerts & Popups</a>
+      <a href="/pages/frames-windows.html" class="sidebar-link" data-testid="nav-frames"><span class="icon">🪟</span> Frames & Windows</a>
+      <a href="/pages/wait-scenarios.html" class="sidebar-link" data-testid="nav-waits"><span class="icon">⏱️</span> Wait Scenarios</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Auth & API</div>
+      <a href="/pages/auth.html" class="sidebar-link" data-testid="nav-auth"><span class="icon">🔐</span> Authentication</a>
+      <a href="/pages/api-playground.html" class="sidebar-link active" data-testid="nav-api"><span class="icon">🔌</span> API Playground</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Advanced</div>
+      <a href="/pages/shadow-dom.html" class="sidebar-link" data-testid="nav-shadow"><span class="icon">👻</span> Shadow DOM</a>
+      <a href="/pages/complex-challenges.html" class="sidebar-link" data-testid="nav-complex"><span class="icon">🧩</span> Complex Challenges</a>
+    </div>
+      <div class="sidebar-footer" data-testid="sidebar-footer">
+        <span class="dev-label">Developed by</span>
+        <span class="dev-name" id="dev-name" data-testid="dev-name">Manikandan Adaikalam</span>
+        <span>Automation Practice Lab</span>
+      </div>
+  </nav>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-title">🔌 API Playground</div>
+      <span class="topbar-badge tag-green">REST • GET • POST • PUT • DELETE</span>
+    </header>
+
+    <main class="page-content">
+
+      <!-- ── API Reference ──────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Available API Endpoints</h3><span class="tag tag-blue">Base URL: /api</span></div>
+        <div class="card-body">
+          <div class="endpoint-row"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/users</span><span class="text-muted">— List all users (supports ?search=, ?role=, ?status=, ?delay=ms)</span></div>
+          <div class="endpoint-row"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/users/:id</span><span class="text-muted">— Get user by ID</span></div>
+          <div class="endpoint-row"><span class="method-badge method-post">POST</span><span class="endpoint-path">/api/users</span><span class="text-muted">— Create a new user (body: name, email, role, age, department)</span></div>
+          <div class="endpoint-row"><span class="method-badge method-put">PUT</span><span class="endpoint-path">/api/users/:id</span><span class="text-muted">— Update a user</span></div>
+          <div class="endpoint-row"><span class="method-badge method-delete">DELETE</span><span class="endpoint-path">/api/users/:id</span><span class="text-muted">— Delete a user</span></div>
+          <div class="endpoint-row"><span class="method-badge method-post">POST</span><span class="endpoint-path">/api/auth/login</span><span class="text-muted">— Login (body: username, password)</span></div>
+          <div class="endpoint-row"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/delayed?ms=3000</span><span class="text-muted">— Delayed response</span></div>
+          <div class="endpoint-row"><span class="method-badge method-get">GET</span><span class="endpoint-path">/api/flaky</span><span class="text-muted">— 50% random failure (retry scenario)</span></div>
+          <div class="endpoint-row"><span class="method-badge method-post">POST</span><span class="endpoint-path">/api/echo</span><span class="text-muted">— Echo request body</span></div>
+        </div>
+      </div>
+
+      <!-- ── GET Users ───────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3><span class="method-badge method-get">GET</span> &nbsp;/api/users</h3><span class="tag tag-green">Scenario: assert response body, status 200, array length</span></div>
+        <div class="card-body">
+          <div class="flex flex-wrap gap-3 mb-3 items-center">
+            <input id="get-search" name="getSearch" type="text" class="form-control" style="max-width:200px" placeholder="?search=alice" data-testid="get-search" />
+            <select id="get-role" name="getRole" class="form-control" style="max-width:150px" data-testid="get-role">
+              <option value="">All Roles</option>
+              <option value="Admin">Admin</option>
+              <option value="Manager">Manager</option>
+              <option value="User">User</option>
+            </select>
+            <input id="get-delay" name="getDelay" type="number" class="form-control" style="max-width:120px" placeholder="delay (ms)" value="0" data-testid="get-delay" min="0" max="10000" />
+            <button id="btn-get-users" name="btnGetUsers" class="btn btn-success" data-testid="btn-get-users" onclick="callGetUsers()">Send GET</button>
+          </div>
+          <div class="flex items-center gap-3 mb-2">
+            <span class="text-muted">Status:</span>
+            <span id="get-status" data-testid="get-status" class="response-status"></span>
+          </div>
+          <pre id="get-result" data-testid="get-result" class="code-box">// Response appears here...</pre>
+        </div>
+      </div>
+
+      <!-- ── POST Create User ────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3><span class="method-badge method-post">POST</span> &nbsp;/api/users</h3><span class="tag tag-blue">Scenario: send JSON body, assert 201, save id for next request</span></div>
+        <div class="card-body grid grid-2">
+          <div>
+            <div class="form-group">
+              <label for="post-name">Name *</label>
+              <input id="post-name" name="postName" type="text" class="form-control" placeholder="Full name" data-testid="post-name" value="Test User" />
+            </div>
+            <div class="form-group">
+              <label for="post-email">Email *</label>
+              <input id="post-email" name="postEmail" type="email" class="form-control" placeholder="email@example.com" data-testid="post-email" value="testuser@example.com" />
+            </div>
+            <div class="form-group">
+              <label for="post-role">Role</label>
+              <select id="post-role" name="postRole" class="form-control" data-testid="post-role">
+                <option value="User" selected>User</option>
+                <option value="Admin">Admin</option>
+                <option value="Manager">Manager</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="post-dept">Department</label>
+              <input id="post-dept" name="postDept" type="text" class="form-control" placeholder="e.g. Engineering" data-testid="post-dept" value="QA" />
+            </div>
+            <button id="btn-post-user" name="btnPostUser" class="btn btn-primary" data-testid="btn-post-user" onclick="callPostUser()">Send POST</button>
+          </div>
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-muted">Status:</span>
+              <span id="post-status" data-testid="post-status" class="response-status"></span>
+            </div>
+            <pre id="post-result" data-testid="post-result" class="code-box">// Response appears here...</pre>
+            <p id="post-created-id" data-testid="post-created-id" class="text-muted mt-2"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PUT Update User ─────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3><span class="method-badge method-put">PUT</span> &nbsp;/api/users/:id</h3><span class="tag tag-yellow">Scenario: update specific user, assert changed fields</span></div>
+        <div class="card-body grid grid-2">
+          <div>
+            <div class="form-group">
+              <label for="put-id">User ID *</label>
+              <input id="put-id" name="putId" type="text" class="form-control" placeholder="e.g. 1" data-testid="put-id" value="1" />
+            </div>
+            <div class="form-group">
+              <label for="put-name">New Name</label>
+              <input id="put-name" name="putName" type="text" class="form-control" placeholder="Updated name" data-testid="put-name" />
+            </div>
+            <div class="form-group">
+              <label for="put-status">Status</label>
+              <select id="put-status" name="putStatus" class="form-control" data-testid="put-status">
+                <option value="">-- No change --</option>
+                <option value="active">active</option>
+                <option value="inactive">inactive</option>
+                <option value="locked">locked</option>
+              </select>
+            </div>
+            <button id="btn-put-user" name="btnPutUser" class="btn btn-warning" data-testid="btn-put-user" onclick="callPutUser()">Send PUT</button>
+          </div>
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-muted">Status:</span>
+              <span id="put-status-badge" data-testid="put-status-badge" class="response-status"></span>
+            </div>
+            <pre id="put-result" data-testid="put-result" class="code-box">// Response appears here...</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── DELETE User ─────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3><span class="method-badge method-delete">DELETE</span> &nbsp;/api/users/:id</h3><span class="tag tag-red">Scenario: delete user, assert 200, then GET returns 404</span></div>
+        <div class="card-body grid grid-2">
+          <div>
+            <div class="form-group">
+              <label for="delete-id">User ID *</label>
+              <input id="delete-id" name="deleteId" type="text" class="form-control" placeholder="e.g. 2" data-testid="delete-id" value="2" />
+            </div>
+            <button id="btn-delete-user" name="btnDeleteUser" class="btn btn-danger" data-testid="btn-delete-user" onclick="callDeleteUser()">Send DELETE</button>
+          </div>
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-muted">Status:</span>
+              <span id="delete-status" data-testid="delete-status" class="response-status"></span>
+            </div>
+            <pre id="delete-result" data-testid="delete-result" class="code-box">// Response appears here...</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Flaky Endpoint ─────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3><span class="method-badge method-get">GET</span> &nbsp;/api/flaky</h3>
+          <span class="tag tag-yellow">Scenario: retry logic — 50% random failure</span>
+          <span class="flaky-indicator ml-2">FLAKY</span>
+        </div>
+        <div class="card-body">
+          <div class="flex gap-3 items-center mb-3">
+            <button id="btn-call-flaky" name="btnCallFlaky" class="btn btn-secondary" data-testid="btn-call-flaky" onclick="callFlaky()">Try Flaky Endpoint</button>
+            <button id="btn-retry-flaky" name="btnRetryFlaky" class="btn btn-outline btn-sm" data-testid="btn-retry-flaky" onclick="retryFlaky()">Auto-Retry (max 5)</button>
+            <span id="flaky-attempt" data-testid="flaky-attempt" class="text-muted"></span>
+          </div>
+          <div class="flex items-center gap-3 mb-2">
+            <span class="text-muted">Status:</span>
+            <span id="flaky-status" data-testid="flaky-status" class="response-status"></span>
+          </div>
+          <pre id="flaky-result" data-testid="flaky-result" class="code-box">// Response appears here...</pre>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/js/mock-api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    let lastCreatedId = null;
+
+    function setStatus(elId, status) {
+      const el = document.getElementById(elId);
+      el.textContent = status;
+      el.className = 'response-status ' + (status < 300 ? 'status-2xx' : status < 500 ? 'status-4xx' : 'status-5xx');
+    }
+
+    async function callGetUsers() {
+      const search = document.getElementById('get-search').value;
+      const role   = document.getElementById('get-role').value;
+      const delay  = document.getElementById('get-delay').value;
+      let url = '/api/users?';
+      if (search) url += `search=${encodeURIComponent(search)}&`;
+      if (role)   url += `role=${encodeURIComponent(role)}&`;
+      if (delay)  url += `delay=${delay}`;
+      document.getElementById('get-result').textContent = '// Loading...';
+      setStatus('get-status', '...');
+      const { status, data } = await apiCall('GET', url);
+      setStatus('get-status', status);
+      document.getElementById('get-result').textContent = prettyJSON(data);
+    }
+
+    async function callPostUser() {
+      const body = {
+        name:       document.getElementById('post-name').value,
+        email:      document.getElementById('post-email').value,
+        role:       document.getElementById('post-role').value,
+        department: document.getElementById('post-dept').value
+      };
+      document.getElementById('post-result').textContent = '// Loading...';
+      const { status, data } = await apiCall('POST', '/api/users', body);
+      setStatus('post-status', status);
+      document.getElementById('post-result').textContent = prettyJSON(data);
+      if (data.data && data.data.id) {
+        lastCreatedId = data.data.id;
+        document.getElementById('post-created-id').textContent = `Created ID: ${lastCreatedId} (auto-filled in PUT/DELETE)`;
+        document.getElementById('put-id').value    = lastCreatedId;
+        document.getElementById('delete-id').value = lastCreatedId;
+        showToast(`User created! ID: ${lastCreatedId}`, 'success');
+      }
+    }
+
+    async function callPutUser() {
+      const id = document.getElementById('put-id').value;
+      if (!id) { showToast('Please enter a user ID','error'); return; }
+      const body = {};
+      const name   = document.getElementById('put-name').value;
+      const status = document.getElementById('put-status').value;
+      if (name)   body.name   = name;
+      if (status) body.status = status;
+      document.getElementById('put-result').textContent = '// Loading...';
+      const { status: s, data } = await apiCall('PUT', `/api/users/${id}`, body);
+      setStatus('put-status-badge', s);
+      document.getElementById('put-result').textContent = prettyJSON(data);
+      if (s === 200) showToast('User updated!', 'success');
+    }
+
+    async function callDeleteUser() {
+      const id = document.getElementById('delete-id').value;
+      if (!id) { showToast('Please enter a user ID','error'); return; }
+      if (!confirm(`Delete user ${id}?`)) return;
+      document.getElementById('delete-result').textContent = '// Loading...';
+      const { status, data } = await apiCall('DELETE', `/api/users/${id}`);
+      setStatus('delete-status', status);
+      document.getElementById('delete-result').textContent = prettyJSON(data);
+      if (status === 200) showToast(`User ${id} deleted!`, 'error', 3000);
+    }
+
+    async function callFlaky() {
+      document.getElementById('flaky-result').textContent = '// Loading...';
+      const { status, data } = await apiCall('GET', '/api/flaky');
+      setStatus('flaky-status', status);
+      document.getElementById('flaky-result').textContent = prettyJSON(data);
+    }
+
+    async function retryFlaky() {
+      const maxAttempts = 5;
+      for (let i = 1; i <= maxAttempts; i++) {
+        document.getElementById('flaky-attempt').textContent = `Attempt ${i}/${maxAttempts}`;
+        document.getElementById('flaky-result').textContent = `// Attempt ${i}...`;
+        const { status, data } = await apiCall('GET', '/api/flaky');
+        setStatus('flaky-status', status);
+        document.getElementById('flaky-result').textContent = prettyJSON(data);
+        if (status < 400) {
+          showToast(`Succeeded on attempt ${i}!`, 'success');
+          document.getElementById('flaky-attempt').textContent = `Succeeded on attempt ${i}/${maxAttempts}`;
+          return;
+        }
+        await new Promise(r => setTimeout(r, 500));
+      }
+      showToast('All retries exhausted!', 'error');
+    }
+  </script>
+</body>
+</html>

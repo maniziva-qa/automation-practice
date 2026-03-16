@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/automation-practice/">
+  <meta charset="UTF-8" />
+  <title>Outer iFrame</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; background: #fdf2f8; padding: 16px; font-size: 14px; color: #1e293b; }
+    h4 { color: #7c3aed; margin-bottom: 10px; }
+    .outer-label { background: #ede9fe; color: #7c3aed; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-block; margin-bottom: 10px; }
+    input { padding: 6px 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 13px; margin-bottom: 8px; display: block; width: 90%; }
+    .inner-wrap { border: 2px dashed #7c3aed; border-radius: 8px; padding: 10px; margin-top: 12px; }
+  </style>
+</head>
+<body>
+  <span class="outer-label">OUTER FRAME</span>
+  <h4>Outer iFrame</h4>
+  <input id="iframe-outer-input" name="outerInput" type="text" placeholder="Outer frame input" data-testid="iframe-outer-input" />
+
+  <div class="inner-wrap">
+    <iframe
+      id="iframe-inner"
+      name="iframeInner"
+      data-testid="iframe-inner"
+      src="/pages/iframe-inner.html"
+      width="100%"
+      height="140"
+      style="border:none"
+      title="Inner iFrame"
+    ></iframe>
+  </div>
+</body>
+</html>

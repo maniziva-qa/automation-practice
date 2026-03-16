@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/automation-practice/">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complex Challenges — Automation Practice Lab</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+  <style>
+    .challenge-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: #1e293b; color: #e2e8f0; font-weight: 700; font-family: monospace; }
+    .captcha-strikethrough { text-decoration: line-through; }
+    .noise-char { display: inline-block; transform: rotate(var(--r, 0deg)) translateY(var(--y, 0px)); color: var(--c, #1e293b); font-weight: 700; }
+    .lazy-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .lazy-placeholder { width:100%; height:140px; background: #e2e8f0; border-radius: var(--radius); display: flex; align-items:center; justify-content:center; color: #94a3b8; font-size: 24px; }
+    .stale-element-demo { padding: 16px; background: #f8fafc; border: 1px solid var(--border); border-radius: var(--radius); }
+    .network-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  </style>
+</head>
+<body>
+  <nav class="sidebar" id="sidebar" data-testid="sidebar-nav">
+    <div class="sidebar-logo"><div class="logo-icon">🧪</div><span>APL</span></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Main</div>
+      <a href="/index.html" class="sidebar-link" data-testid="nav-home"><span class="icon">🏠</span> Dashboard Home</a>
+      <a href="/pages/dashboard.html" class="sidebar-link" data-testid="nav-dashboard"><span class="icon">📊</span> Analytics Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Form Testing</div>
+      <a href="/pages/basic-elements.html" class="sidebar-link" data-testid="nav-basic"><span class="icon">📝</span> Basic Elements</a>
+      <a href="/pages/advanced-elements.html" class="sidebar-link" data-testid="nav-advanced"><span class="icon">⚙️</span> Advanced Elements</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Table & Data</div>
+      <a href="/pages/tables.html" class="sidebar-link" data-testid="nav-tables"><span class="icon">📋</span> Table Practice</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">UI Interactions</div>
+      <a href="/pages/alerts-popups.html" class="sidebar-link" data-testid="nav-alerts"><span class="icon">🔔</span> Alerts & Popups</a>
+      <a href="/pages/frames-windows.html" class="sidebar-link" data-testid="nav-frames"><span class="icon">🪟</span> Frames & Windows</a>
+      <a href="/pages/wait-scenarios.html" class="sidebar-link" data-testid="nav-waits"><span class="icon">⏱️</span> Wait Scenarios</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Auth & API</div>
+      <a href="/pages/auth.html" class="sidebar-link" data-testid="nav-auth"><span class="icon">🔐</span> Authentication</a>
+      <a href="/pages/api-playground.html" class="sidebar-link" data-testid="nav-api"><span class="icon">🔌</span> API Playground</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Advanced</div>
+      <a href="/pages/shadow-dom.html" class="sidebar-link" data-testid="nav-shadow"><span class="icon">👻</span> Shadow DOM</a>
+      <a href="/pages/complex-challenges.html" class="sidebar-link active" data-testid="nav-complex"><span class="icon">🧩</span> Complex Challenges</a>
+    </div>
+      <div class="sidebar-footer" data-testid="sidebar-footer">
+        <span class="dev-label">Developed by</span>
+        <span class="dev-name" id="dev-name" data-testid="dev-name">Manikandan Adaikalam</span>
+        <span>Automation Practice Lab</span>
+      </div>
+  </nav>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-title">🧩 Complex Automation Challenges</div>
+      <span class="topbar-badge tag-red">Infinite Scroll • Lazy Load • CAPTCHA • Flaky • Stale</span>
+    </header>
+
+    <main class="page-content">
+
+      <!-- ── 1. Infinite Scroll ─────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>1. Infinite Scroll</h3>
+          <span class="challenge-badge">challenge: scroll to load more</span>
+        </div>
+        <div class="card-body">
+          <p class="text-muted mb-3">Scroll inside the container to load more items. Automation: scroll to bottom, wait for new elements to appear.</p>
+          <div id="infinite-container" data-testid="infinite-container">
+            <div id="infinite-list" data-testid="infinite-list"></div>
+            <div id="infinite-loader" data-testid="infinite-loader" class="loading-overlay" style="padding:20px">
+              <div class="spinner"></div><span>Loading more...</span>
+            </div>
+          </div>
+          <p id="infinite-count" data-testid="infinite-count" class="text-muted mt-2"></p>
+        </div>
+      </div>
+
+      <!-- ── 2. Lazy Loading Images ─────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>2. Lazy Loading Images</h3>
+          <span class="challenge-badge">challenge: scroll into viewport to trigger load</span>
+        </div>
+        <div class="card-body">
+          <p class="text-muted mb-3">Images only load when scrolled into the viewport. Automation must scroll to them and assert <code>loaded</code> class is added.</p>
+          <div class="lazy-grid" id="lazy-image-grid" data-testid="lazy-image-grid">
+            <!-- Images filled by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 3. Flaky Element ──────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>3. Flaky Element</h3>
+          <span class="challenge-badge">challenge: element appears/disappears randomly</span>
+          <span class="flaky-indicator ml-2">FLAKY</span>
+        </div>
+        <div class="card-body">
+          <p class="text-muted mb-3">The element below randomly appears/disappears every 1–3 seconds. Automation must implement retry logic or use explicit waits.</p>
+          <button id="btn-start-flaky" name="startFlaky" class="btn btn-warning btn-sm" data-testid="btn-start-flaky" onclick="startFlaky()">Start Flaky Simulation</button>
+          <button id="btn-stop-flaky" name="stopFlaky" class="btn btn-secondary btn-sm" data-testid="btn-stop-flaky" onclick="stopFlaky()">Stop</button>
+          <div id="flaky-target-container" data-testid="flaky-target-container" style="min-height:60px; margin-top:12px; display:flex; align-items:center;">
+            <button id="flaky-target" name="flakyTarget" class="btn btn-primary hidden" data-testid="flaky-target" onclick="showToast('You caught the flaky element!','success')">
+              🎯 Catch me if you can!
+            </button>
+          </div>
+          <p id="flaky-log" data-testid="flaky-log" class="text-muted"></p>
+        </div>
+      </div>
+
+      <!-- ── 4. Stale Element ──────────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>4. Stale Element Reference</h3>
+          <span class="challenge-badge">challenge: element re-renders after interaction</span>
+        </div>
+        <div class="card-body">
+          <p class="text-muted mb-3">Clicking "Refresh List" destroys and recreates the list DOM. Any reference to old elements becomes stale. Automation must re-locate elements after the DOM update.</p>
+          <div class="stale-element-demo">
+            <button id="btn-refresh-list" name="refreshList" class="btn btn-primary btn-sm" data-testid="btn-refresh-list" onclick="refreshStaleList()">Refresh List (Re-renders DOM)</button>
+            <div id="stale-list" data-testid="stale-list" class="mt-3">
+              <div class="stale-highlight" id="stale-item-1" data-testid="stale-item-1" style="padding:8px; margin-bottom:6px; background:#f8fafc; border-radius:6px; border:1px solid var(--border);">Item 1</div>
+              <div class="stale-highlight" id="stale-item-2" data-testid="stale-item-2" style="padding:8px; margin-bottom:6px; background:#f8fafc; border-radius:6px; border:1px solid var(--border);">Item 2</div>
+              <div class="stale-highlight" id="stale-item-3" data-testid="stale-item-3" style="padding:8px; margin-bottom:6px; background:#f8fafc; border-radius:6px; border:1px solid var(--border);">Item 3</div>
+            </div>
+            <p id="stale-result" data-testid="stale-result" class="text-muted mt-2"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── 5. CAPTCHA Simulation ──────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>5. CAPTCHA Simulation</h3>
+          <span class="challenge-badge">challenge: read visual text, type it exactly</span>
+        </div>
+        <div class="card-body">
+          <p class="text-muted mb-3">Not a real CAPTCHA — the code is in the DOM as <code>data-captcha-value</code> on the container (for test access). Real CAPTCHAs are solved via third-party services.</p>
+          <div id="captcha-container" data-testid="captcha-container" data-captcha-value="">
+            <div class="captcha-box" id="captcha-display" data-testid="captcha-display"></div>
+          </div>
+          <div class="flex gap-3 mt-3 items-center">
+            <input id="captcha-input" name="captchaInput" type="text" class="form-control" style="max-width:200px" placeholder="Enter the code above" data-testid="captcha-input" />
+            <button id="btn-captcha-verify" name="captchaVerify" class="btn btn-primary btn-sm" data-testid="btn-captcha-verify" onclick="verifyCaptcha()">Verify</button>
+            <button id="btn-captcha-refresh" name="captchaRefresh" class="btn btn-secondary btn-sm" data-testid="btn-captcha-refresh" onclick="generateCaptcha()">🔄 New Code</button>
+          </div>
+          <div id="captcha-result" data-testid="captcha-result" class="mt-3"></div>
+        </div>
+      </div>
+
+      <!-- ── 6. Duplicate Selectors ─────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>6. Duplicate Class Names (No Unique IDs)</h3>
+          <span class="challenge-badge">challenge: locate the RIGHT element among identical-looking ones</span>
+        </div>
+        <div class="card-body">
+          <p class="text-muted mb-3">All buttons below use the same class name. Automation must use index, parent context, or <code>data-testid</code> to target the correct one.</p>
+          <div id="duplicate-container" data-testid="duplicate-container">
+            <div class="item-row" data-testid="item-row-1" style="display:flex; gap:10px; align-items:center; margin-bottom:8px; padding:10px; background:#f8fafc; border-radius:6px; border:1px solid var(--border);">
+              <span class="item-name" data-testid="item-name-1">Product Alpha</span>
+              <button class="add-to-cart-btn btn btn-success btn-sm" id="btn-cart-1" data-testid="btn-cart-1" onclick="addToCart('Alpha')">Add to Cart</button>
+            </div>
+            <div class="item-row" data-testid="item-row-2" style="display:flex; gap:10px; align-items:center; margin-bottom:8px; padding:10px; background:#f8fafc; border-radius:6px; border:1px solid var(--border);">
+              <span class="item-name" data-testid="item-name-2">Product Beta</span>
+              <button class="add-to-cart-btn btn btn-success btn-sm" id="btn-cart-2" data-testid="btn-cart-2" onclick="addToCart('Beta')">Add to Cart</button>
+            </div>
+            <div class="item-row" data-testid="item-row-3" style="display:flex; gap:10px; align-items:center; margin-bottom:8px; padding:10px; background:#f8fafc; border-radius:6px; border:1px solid var(--border);">
+              <span class="item-name" data-testid="item-name-3">Product Gamma</span>
+              <button class="add-to-cart-btn btn btn-success btn-sm" id="btn-cart-3" data-testid="btn-cart-3" onclick="addToCart('Gamma')">Add to Cart</button>
+            </div>
+          </div>
+          <p id="cart-result" data-testid="cart-result" class="text-muted mt-3"></p>
+        </div>
+      </div>
+
+      <!-- ── 7. Network Delay Simulation ───────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>7. Network Delay Simulation</h3>
+          <span class="challenge-badge">challenge: handle slow network, assert loading states</span>
+        </div>
+        <div class="card-body">
+          <div class="network-controls mb-3">
+            <select id="network-preset" name="networkPreset" class="form-control" style="max-width:180px" data-testid="network-preset">
+              <option value="500">Fast (500ms)</option>
+              <option value="2000" selected>Normal (2s)</option>
+              <option value="5000">Slow (5s)</option>
+              <option value="10000">Very Slow (10s)</option>
+            </select>
+            <button id="btn-network-fetch" name="networkFetch" class="btn btn-primary btn-sm" data-testid="btn-network-fetch" onclick="networkFetch()">Fetch with Delay</button>
+          </div>
+          <div id="network-loading" data-testid="network-loading" class="hidden" style="display:flex; align-items:center; gap:10px;">
+            <div class="spinner" style="width:24px; height:24px;"></div>
+            <span id="network-loading-text" data-testid="network-loading-text">Loading...</span>
+          </div>
+          <div id="network-result" data-testid="network-result" class="hidden code-box"></div>
+        </div>
+      </div>
+
+      <!-- ── 8. Dynamic ID Elements ─────────────────────────── -->
+      <div class="card">
+        <div class="card-header">
+          <h3>8. Dynamic IDs</h3>
+          <span class="challenge-badge">challenge: locate elements with changing IDs</span>
+        </div>
+        <div class="card-body">
+          <p class="text-muted mb-3">Each time you click "Regenerate", the button IDs change. Automation must use <code>data-testid</code> or text content instead of fragile dynamic IDs.</p>
+          <button id="btn-regen-ids" name="regenIds" class="btn btn-secondary btn-sm" data-testid="btn-regen-ids" onclick="regenDynamicIds()">🔄 Regenerate IDs</button>
+          <div id="dynamic-id-container" data-testid="dynamic-id-container" class="flex flex-wrap gap-3 mt-3"></div>
+          <p id="dynamic-id-result" data-testid="dynamic-id-result" class="text-muted mt-2"></p>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/js/mock-api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    // ── 1. Infinite scroll
+    let infiniteCount = 0;
+    let infiniteLoading = false;
+
+    function loadMoreItems() {
+      if (infiniteLoading) return;
+      infiniteLoading = true;
+      document.getElementById('infinite-loader').style.display = 'flex';
+      setTimeout(() => {
+        const list = document.getElementById('infinite-list');
+        for (let i = 0; i < 10; i++) {
+          infiniteCount++;
+          const div = document.createElement('div');
+          div.className = 'infinite-item';
+          div.id = `infinite-item-${infiniteCount}`;
+          div.setAttribute('data-testid', `infinite-item-${infiniteCount}`);
+          div.innerHTML = `<span style="font-size:20px">${['📧','📁','📊','🔔','👤','💬'][infiniteCount % 6]}</span><div><strong>Record #${infiniteCount}</strong><br/><span class="text-muted" style="font-size:12px">Loaded at ${new Date().toLocaleTimeString()}</span></div>`;
+          list.appendChild(div);
+        }
+        document.getElementById('infinite-loader').style.display = 'none';
+        document.getElementById('infinite-count').textContent = `${infiniteCount} items loaded`;
+        infiniteLoading = false;
+      }, 800);
+    }
+
+    document.getElementById('infinite-container').addEventListener('scroll', function() {
+      if (this.scrollTop + this.clientHeight >= this.scrollHeight - 50) loadMoreItems();
+    });
+    loadMoreItems(); // initial load
+
+    // ── 2. Lazy images
+    const COLORS = ['#dbeafe','#dcfce7','#fef9c3','#ede9fe','#fce7f3','#ffedd5'];
+    const grid = document.getElementById('lazy-image-grid');
+    for (let i = 1; i <= 9; i++) {
+      const wrapper = document.createElement('div');
+      wrapper.id = `lazy-img-wrapper-${i}`;
+      wrapper.setAttribute('data-testid', `lazy-img-wrapper-${i}`);
+      const placeholder = document.createElement('div');
+      placeholder.className = 'lazy-placeholder';
+      placeholder.id = `lazy-placeholder-${i}`;
+      placeholder.setAttribute('data-testid', `lazy-placeholder-${i}`);
+      placeholder.textContent = '🖼';
+      wrapper.appendChild(placeholder);
+      grid.appendChild(wrapper);
+    }
+
+    const lazyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const i = el.id.split('-').pop();
+          setTimeout(() => {
+            el.style.background = COLORS[i % COLORS.length];
+            el.style.color = '#64748b';
+            el.innerHTML = `<div style="text-align:center"><div style="font-size:30px">🖼</div><div style="font-size:12px; margin-top:4px;">Image ${i}</div><div style="font-size:10px;opacity:.7">lazy-loaded</div></div>`;
+            el.setAttribute('data-loaded', 'true');
+            el.className = 'lazy-placeholder loaded';
+          }, 300 + i * 100);
+          lazyObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('.lazy-placeholder').forEach(el => lazyObserver.observe(el));
+
+    // ── 3. Flaky element
+    let flakyInterval = null;
+    let flakyAppears = 0;
+    let flakyHides = 0;
+    function startFlaky() {
+      if (flakyInterval) return;
+      flakyInterval = setInterval(() => {
+        const el = document.getElementById('flaky-target');
+        const show = Math.random() > 0.4;
+        el.classList.toggle('hidden', !show);
+        if (show) flakyAppears++; else flakyHides++;
+        document.getElementById('flaky-log').textContent = `Appeared: ${flakyAppears} times | Hidden: ${flakyHides} times`;
+      }, 1000 + Math.random() * 2000);
+    }
+    function stopFlaky() {
+      if (flakyInterval) { clearInterval(flakyInterval); flakyInterval = null; }
+      document.getElementById('flaky-target').classList.add('hidden');
+    }
+
+    // ── 4. Stale element
+    let staleRenders = 0;
+    function refreshStaleList() {
+      staleRenders++;
+      const list = document.getElementById('stale-list');
+      // Destroy and recreate DOM — existing references are now stale
+      const items = ['Item A (render #' + staleRenders + ')', 'Item B (render #' + staleRenders + ')', 'Item C (render #' + staleRenders + ')'];
+      list.innerHTML = items.map((text, i) =>
+        `<div class="stale-highlight" id="stale-item-${i+1}" data-testid="stale-item-${i+1}" style="padding:8px; margin-bottom:6px; background:#fef9c3; border-radius:6px; border:1px solid #fde68a;">${text}</div>`
+      ).join('');
+      document.getElementById('stale-result').textContent = `DOM re-rendered ${staleRenders} time(s). Old element references are now stale!`;
+    }
+
+    // ── 5. CAPTCHA
+    const CAPTCHA_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let captchaValue = '';
+    function generateCaptcha() {
+      captchaValue = Array.from({length: 6}, () => CAPTCHA_CHARS[Math.floor(Math.random() * CAPTCHA_CHARS.length)]).join('');
+      const display = document.getElementById('captcha-display');
+      display.innerHTML = captchaValue.split('').map(c => {
+        const r = (Math.random() * 30 - 15).toFixed(0);
+        const y = (Math.random() * 4 - 2).toFixed(0);
+        const colors = ['#1e293b','#2563eb','#7c3aed','#16a34a','#dc2626'];
+        const col = colors[Math.floor(Math.random() * colors.length)];
+        return `<span class="noise-char" style="--r:${r}deg; --y:${y}px; --c:${col}">${c}</span>`;
+      }).join('&nbsp;');
+      document.getElementById('captcha-container').setAttribute('data-captcha-value', captchaValue);
+      document.getElementById('captcha-input').value = '';
+      document.getElementById('captcha-result').innerHTML = '';
+    }
+    function verifyCaptcha() {
+      const val = document.getElementById('captcha-input').value.toUpperCase().replace(/\s/g,'');
+      const el  = document.getElementById('captcha-result');
+      if (val === captchaValue) {
+        el.innerHTML = '<div class="alert alert-success" data-testid="captcha-success">✅ CAPTCHA verified! You are human.</div>';
+        showToast('CAPTCHA passed!', 'success');
+      } else {
+        el.innerHTML = '<div class="alert alert-danger" data-testid="captcha-fail">❌ Incorrect. Please try again.</div>';
+        generateCaptcha();
+      }
+    }
+    generateCaptcha();
+
+    // ── 6. Duplicate selectors — just helper function
+    const cart = [];
+    function addToCart(product) {
+      cart.push(product);
+      document.getElementById('cart-result').textContent = `Cart: ${cart.join(', ')}`;
+      showToast(`Added ${product} to cart!`, 'success', 2000);
+    }
+
+    // ── 7. Network delay
+    async function networkFetch() {
+      const ms = document.getElementById('network-preset').value;
+      const loading = document.getElementById('network-loading');
+      const result  = document.getElementById('network-result');
+      result.classList.add('hidden');
+      loading.style.display = 'flex';
+      document.getElementById('network-loading-text').textContent = `Waiting ${ms}ms for response...`;
+      try {
+        const res  = await fetch(`/api/delayed?ms=${ms}`);
+        const json = await res.json();
+        result.textContent = JSON.stringify(json, null, 2);
+        result.classList.remove('hidden');
+        showToast(`Response received after ${ms}ms!`, 'success');
+      } catch(e) {
+        result.textContent = 'Error: ' + e.message;
+        result.classList.remove('hidden');
+      } finally {
+        loading.style.display = 'none';
+      }
+    }
+
+    // ── 8. Dynamic IDs
+    function regenDynamicIds() {
+      const container = document.getElementById('dynamic-id-container');
+      const labels = ['Save', 'Submit', 'Delete', 'Cancel', 'Update'];
+      container.innerHTML = labels.map((label, i) => {
+        const dynId = 'btn-dyn-' + Math.random().toString(36).substr(2,8);
+        return `<button id="${dynId}" data-testid="dynamic-btn-${label.toLowerCase()}" class="btn btn-secondary btn-sm" onclick="document.getElementById('dynamic-id-result').textContent='Clicked: ${label} (stable data-testid)'">
+          ${label} <span style="font-size:10px; opacity:.5">#${dynId.slice(-4)}</span>
+        </button>`;
+      }).join('');
+      document.getElementById('dynamic-id-result').textContent = 'IDs regenerated — data-testid values are stable.';
+    }
+    regenDynamicIds();
+  </script>
+</body>
+</html>

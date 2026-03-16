@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/automation-practice/">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alerts & Popups — Automation Practice Lab</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <nav class="sidebar" id="sidebar" data-testid="sidebar-nav">
+    <div class="sidebar-logo"><div class="logo-icon">🧪</div><span>APL</span></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Main</div>
+      <a href="/index.html" class="sidebar-link" data-testid="nav-home"><span class="icon">🏠</span> Dashboard Home</a>
+      <a href="/pages/dashboard.html" class="sidebar-link" data-testid="nav-dashboard"><span class="icon">📊</span> Analytics Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Form Testing</div>
+      <a href="/pages/basic-elements.html" class="sidebar-link" data-testid="nav-basic"><span class="icon">📝</span> Basic Elements</a>
+      <a href="/pages/advanced-elements.html" class="sidebar-link" data-testid="nav-advanced"><span class="icon">⚙️</span> Advanced Elements</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Table & Data</div>
+      <a href="/pages/tables.html" class="sidebar-link" data-testid="nav-tables"><span class="icon">📋</span> Table Practice</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">UI Interactions</div>
+      <a href="/pages/alerts-popups.html" class="sidebar-link active" data-testid="nav-alerts"><span class="icon">🔔</span> Alerts & Popups</a>
+      <a href="/pages/frames-windows.html" class="sidebar-link" data-testid="nav-frames"><span class="icon">🪟</span> Frames & Windows</a>
+      <a href="/pages/wait-scenarios.html" class="sidebar-link" data-testid="nav-waits"><span class="icon">⏱️</span> Wait Scenarios</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Auth & API</div>
+      <a href="/pages/auth.html" class="sidebar-link" data-testid="nav-auth"><span class="icon">🔐</span> Authentication</a>
+      <a href="/pages/api-playground.html" class="sidebar-link" data-testid="nav-api"><span class="icon">🔌</span> API Playground</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Advanced</div>
+      <a href="/pages/shadow-dom.html" class="sidebar-link" data-testid="nav-shadow"><span class="icon">👻</span> Shadow DOM</a>
+      <a href="/pages/complex-challenges.html" class="sidebar-link" data-testid="nav-complex"><span class="icon">🧩</span> Complex Challenges</a>
+    </div>
+      <div class="sidebar-footer" data-testid="sidebar-footer">
+        <span class="dev-label">Developed by</span>
+        <span class="dev-name" id="dev-name" data-testid="dev-name">Manikandan Adaikalam</span>
+        <span>Automation Practice Lab</span>
+      </div>
+  </nav>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-title">🔔 Alerts &amp; Popups</div>
+      <span class="topbar-badge tag-red">Alert • Confirm • Prompt • Modal • Toast</span>
+    </header>
+
+    <main class="page-content">
+
+      <!-- ── JS Alerts ──────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Browser Dialogs (JS Alerts)</h3><span class="tag tag-red">Scenario: driver.switchTo().alert().accept()/dismiss()/getText()</span></div>
+        <div class="card-body">
+          <div class="flex flex-wrap gap-3 mb-3">
+            <button id="btn-js-alert" name="jsAlertBtn" class="btn btn-warning" data-testid="btn-js-alert" onclick="triggerAlert()">
+              Simple Alert
+            </button>
+            <button id="btn-js-confirm" name="jsConfirmBtn" class="btn btn-info" data-testid="btn-js-confirm" onclick="triggerConfirm()">
+              Confirmation Dialog
+            </button>
+            <button id="btn-js-prompt" name="jsPromptBtn" class="btn btn-primary" data-testid="btn-js-prompt" onclick="triggerPrompt()">
+              Prompt Dialog
+            </button>
+          </div>
+          <div id="alert-result" name="alertResult" data-testid="alert-result" class="text-muted"></div>
+          <div class="alert alert-info mt-3">
+            <span>💡</span>
+            <span>
+              <strong>Selenium:</strong> <code>driver.switchTo().alert().accept()</code> |
+              <strong>Playwright:</strong> <code>page.on('dialog', d => d.accept())</code> |
+              <strong>Cypress:</strong> <code>cy.on('window:alert', stub)</code>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Modal Dialog ───────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Modal Dialogs</h3><span class="tag tag-blue">Scenario: open modal, interact, close</span></div>
+        <div class="card-body">
+          <div class="flex flex-wrap gap-3 mb-3">
+            <button id="btn-open-modal-basic" name="openModalBasic" class="btn btn-primary" data-testid="btn-open-modal-basic" onclick="openModal('modal-basic')">
+              Basic Modal
+            </button>
+            <button id="btn-open-modal-form" name="openModalForm" class="btn btn-success" data-testid="btn-open-modal-form" onclick="openModal('modal-form')">
+              Form Modal
+            </button>
+            <button id="btn-open-modal-confirm" name="openModalConfirm" class="btn btn-danger" data-testid="btn-open-modal-confirm" onclick="openModal('modal-confirm')">
+              Confirm Delete Modal
+            </button>
+          </div>
+          <p id="modal-result" name="modalResult" data-testid="modal-result" class="text-muted"></p>
+        </div>
+      </div>
+
+      <!-- ── Toast Notifications ────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Toast Notifications</h3><span class="tag tag-green">Scenario: trigger, wait for, assert toast text</span></div>
+        <div class="card-body">
+          <div class="flex flex-wrap gap-3">
+            <button id="btn-toast-success" name="toastSuccess" class="btn btn-success" data-testid="btn-toast-success" onclick="showToast('Operation completed successfully!','success')">
+              Success Toast
+            </button>
+            <button id="btn-toast-error" name="toastError" class="btn btn-danger" data-testid="btn-toast-error" onclick="showToast('An unexpected error occurred.','error')">
+              Error Toast
+            </button>
+            <button id="btn-toast-warning" name="toastWarning" class="btn btn-warning" data-testid="btn-toast-warning" onclick="showToast('Warning: Low disk space.','warning')">
+              Warning Toast
+            </button>
+            <button id="btn-toast-info" name="toastInfo" class="btn btn-info" data-testid="btn-toast-info" onclick="showToast('New update available.','info')">
+              Info Toast
+            </button>
+            <button id="btn-toast-long" name="toastLong" class="btn btn-secondary" data-testid="btn-toast-long" onclick="showToast('This toast stays for 8 seconds — good for slower assertions!','info',8000)">
+              Long Toast (8s)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Inline Alerts ──────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Inline Alerts</h3><span class="tag tag-yellow">Scenario: trigger alert via action, assert text content</span></div>
+        <div class="card-body">
+          <div class="flex flex-wrap gap-3 mb-4">
+            <button id="btn-show-success-alert" name="showSuccessAlert" class="btn btn-success btn-sm" data-testid="btn-show-success-alert" onclick="showInlineAlert('inline-alert','success','✅ Form saved successfully!')">Show Success</button>
+            <button id="btn-show-danger-alert" name="showDangerAlert" class="btn btn-danger btn-sm" data-testid="btn-show-danger-alert" onclick="showInlineAlert('inline-alert','danger','❌ Validation failed: email is required.')">Show Error</button>
+            <button id="btn-show-info-alert" name="showInfoAlert" class="btn btn-info btn-sm" data-testid="btn-show-info-alert" onclick="showInlineAlert('inline-alert','info','ℹ️ Your session will expire in 5 minutes.')">Show Info</button>
+            <button id="btn-show-warning-alert" name="showWarningAlert" class="btn btn-warning btn-sm" data-testid="btn-show-warning-alert" onclick="showInlineAlert('inline-alert','warning','⚠️ Unsaved changes will be lost.')">Show Warning</button>
+            <button id="btn-hide-alert" name="hideAlert" class="btn btn-secondary btn-sm" data-testid="btn-hide-alert" onclick="hideInlineAlert('inline-alert')">Hide Alert</button>
+          </div>
+          <div id="inline-alert" name="inlineAlert" data-testid="inline-alert" class="hidden"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ── Basic Modal ─────────────────────────────────────────── -->
+  <div id="modal-basic" name="modalBasic" class="modal-overlay hidden" data-testid="modal-basic">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-basic-title">
+      <div class="modal-header">
+        <span id="modal-basic-title">📋 Basic Modal</span>
+        <button class="modal-close" id="btn-close-modal-basic" data-testid="btn-close-modal-basic" onclick="closeModal('modal-basic')" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body" id="modal-basic-body" data-testid="modal-basic-body">
+        <p>This is a basic modal dialog. Automation tools can:</p>
+        <ul style="margin-top:10px; margin-left:20px; line-height:2">
+          <li>Detect modal is visible via <code>aria-modal="true"</code></li>
+          <li>Read text from <code>data-testid="modal-basic-body"</code></li>
+          <li>Close via the × button or pressing Escape</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-modal-basic-close" name="modalBasicClose" class="btn btn-secondary" data-testid="btn-modal-basic-close" onclick="closeModal('modal-basic')">Close</button>
+        <button id="btn-modal-basic-ok" name="modalBasicOk" class="btn btn-primary" data-testid="btn-modal-basic-ok" onclick="closeModal('modal-basic'); setResult('modal-result','Modal OK clicked')">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Form Modal ──────────────────────────────────────────── -->
+  <div id="modal-form" name="modalForm" class="modal-overlay hidden" data-testid="modal-form">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-form-title">
+      <div class="modal-header">
+        <span id="modal-form-title">📝 Create User</span>
+        <button class="modal-close" id="btn-close-modal-form" data-testid="btn-close-modal-form" onclick="closeModal('modal-form')">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="modal-input-name">Name</label>
+          <input id="modal-input-name" name="modalName" type="text" class="form-control" placeholder="Enter name" data-testid="modal-input-name" />
+        </div>
+        <div class="form-group">
+          <label for="modal-input-email">Email</label>
+          <input id="modal-input-email" name="modalEmail" type="email" class="form-control" placeholder="Enter email" data-testid="modal-input-email" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-modal-form-cancel" name="modalFormCancel" class="btn btn-secondary" data-testid="btn-modal-form-cancel" onclick="closeModal('modal-form')">Cancel</button>
+        <button id="btn-modal-form-submit" name="modalFormSubmit" class="btn btn-success" data-testid="btn-modal-form-submit" onclick="submitModalForm()">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Confirm Delete Modal ────────────────────────────────── -->
+  <div id="modal-confirm" name="modalConfirm" class="modal-overlay hidden" data-testid="modal-confirm">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-confirm-title">
+      <div class="modal-header">
+        <span id="modal-confirm-title">🗑️ Confirm Delete</span>
+        <button class="modal-close" id="btn-close-modal-confirm" data-testid="btn-close-modal-confirm" onclick="closeModal('modal-confirm')">×</button>
+      </div>
+      <div class="modal-body" id="modal-confirm-body" data-testid="modal-confirm-body">
+        <p>Are you sure you want to delete this item? This action <strong>cannot be undone</strong>.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-modal-confirm-cancel" name="modalConfirmCancel" class="btn btn-secondary" data-testid="btn-modal-confirm-cancel" onclick="closeModal('modal-confirm')">Cancel</button>
+        <button id="btn-modal-confirm-delete" name="modalConfirmDelete" class="btn btn-danger" data-testid="btn-modal-confirm-delete" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/js/mock-api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    // Close modal on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay:not(.hidden)').forEach(m => m.classList.add('hidden'));
+      }
+    });
+
+    function triggerAlert() {
+      alert('This is a JavaScript alert!\n\nSelenium: driver.switchTo().alert().accept()');
+      document.getElementById('alert-result').textContent = 'Alert was accepted.';
+    }
+
+    function triggerConfirm() {
+      const result = confirm('Do you confirm this action?\n\nClick OK to confirm, Cancel to dismiss.');
+      document.getElementById('alert-result').textContent = result ? 'Confirm: OK (accepted)' : 'Confirm: Cancelled (dismissed)';
+    }
+
+    function triggerPrompt() {
+      const val = prompt('Enter your name:', 'Automation Tester');
+      document.getElementById('alert-result').textContent = val !== null ? `Prompt result: "${val}"` : 'Prompt was dismissed.';
+    }
+
+    function submitModalForm() {
+      const name  = document.getElementById('modal-input-name').value.trim();
+      const email = document.getElementById('modal-input-email').value.trim();
+      if (!name || !email) { showToast('Both fields are required!','error'); return; }
+      closeModal('modal-form');
+      document.getElementById('modal-result').textContent = `User created: ${name} (${email})`;
+      showToast(`User "${name}" created!`, 'success');
+    }
+
+    function confirmDelete() {
+      closeModal('modal-confirm');
+      document.getElementById('modal-result').textContent = 'Item deleted (simulated).';
+      showToast('Item deleted!', 'error', 3000);
+    }
+
+    function showInlineAlert(id, type, msg) {
+      const el = document.getElementById(id);
+      el.className = `alert alert-${type}`;
+      el.textContent = msg;
+      el.classList.remove('hidden');
+    }
+    function hideInlineAlert(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+    function setResult(id, msg) {
+      document.getElementById(id).textContent = msg;
+    }
+  </script>
+</body>
+</html>

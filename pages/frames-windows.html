@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="/automation-practice/">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frames & Windows — Automation Practice Lab</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <nav class="sidebar" id="sidebar" data-testid="sidebar-nav">
+    <div class="sidebar-logo"><div class="logo-icon">🧪</div><span>APL</span></div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Main</div>
+      <a href="/index.html" class="sidebar-link" data-testid="nav-home"><span class="icon">🏠</span> Dashboard Home</a>
+      <a href="/pages/dashboard.html" class="sidebar-link" data-testid="nav-dashboard"><span class="icon">📊</span> Analytics Dashboard</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Form Testing</div>
+      <a href="/pages/basic-elements.html" class="sidebar-link" data-testid="nav-basic"><span class="icon">📝</span> Basic Elements</a>
+      <a href="/pages/advanced-elements.html" class="sidebar-link" data-testid="nav-advanced"><span class="icon">⚙️</span> Advanced Elements</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Table & Data</div>
+      <a href="/pages/tables.html" class="sidebar-link" data-testid="nav-tables"><span class="icon">📋</span> Table Practice</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">UI Interactions</div>
+      <a href="/pages/alerts-popups.html" class="sidebar-link" data-testid="nav-alerts"><span class="icon">🔔</span> Alerts & Popups</a>
+      <a href="/pages/frames-windows.html" class="sidebar-link active" data-testid="nav-frames"><span class="icon">🪟</span> Frames & Windows</a>
+      <a href="/pages/wait-scenarios.html" class="sidebar-link" data-testid="nav-waits"><span class="icon">⏱️</span> Wait Scenarios</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Auth & API</div>
+      <a href="/pages/auth.html" class="sidebar-link" data-testid="nav-auth"><span class="icon">🔐</span> Authentication</a>
+      <a href="/pages/api-playground.html" class="sidebar-link" data-testid="nav-api"><span class="icon">🔌</span> API Playground</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Advanced</div>
+      <a href="/pages/shadow-dom.html" class="sidebar-link" data-testid="nav-shadow"><span class="icon">👻</span> Shadow DOM</a>
+      <a href="/pages/complex-challenges.html" class="sidebar-link" data-testid="nav-complex"><span class="icon">🧩</span> Complex Challenges</a>
+    </div>
+      <div class="sidebar-footer" data-testid="sidebar-footer">
+        <span class="dev-label">Developed by</span>
+        <span class="dev-name" id="dev-name" data-testid="dev-name">Manikandan Adaikalam</span>
+        <span>Automation Practice Lab</span>
+      </div>
+  </nav>
+
+  <div class="main-wrapper">
+    <header class="topbar">
+      <div class="topbar-title">🪟 Frames &amp; Windows</div>
+      <span class="topbar-badge tag-purple">iframe • Nested • Tab • Window</span>
+    </header>
+
+    <main class="page-content">
+
+      <!-- ── Single iframe ─────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Single iFrame</h3><span class="tag tag-blue">Scenario: driver.switchTo().frame("iframe-simple")</span></div>
+        <div class="card-body">
+          <div class="alert alert-info mb-3">
+            <span>💡</span>
+            <div>
+              <strong>Selenium:</strong> <code>driver.switchTo().frame("iframe-simple");</code><br/>
+              <strong>Playwright:</strong> <code>page.frameLocator('#iframe-simple').locator('#iframe-btn-submit');</code><br/>
+              <strong>Cypress:</strong> <code>cy.get('#iframe-simple').its('0.contentDocument').find('#iframe-btn-submit');</code>
+            </div>
+          </div>
+          <div class="iframe-wrap">
+            <iframe
+              id="iframe-simple"
+              name="iframeSimple"
+              data-testid="iframe-simple"
+              src="/pages/iframe-content.html"
+              height="260"
+              title="Simple iFrame Demo"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Nested iframe ──────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Nested iFrame</h3><span class="tag tag-yellow">Scenario: switch to outer frame, then inner frame</span></div>
+        <div class="card-body">
+          <div class="alert alert-info mb-3">
+            <span>💡</span>
+            <div>
+              <strong>Selenium:</strong> <code>driver.switchTo().frame("iframe-outer");</code> then <code>driver.switchTo().frame("iframe-inner");</code>
+            </div>
+          </div>
+          <div class="iframe-wrap">
+            <iframe
+              id="iframe-outer"
+              name="iframeOuter"
+              data-testid="iframe-outer"
+              src="/pages/iframe-outer.html"
+              height="300"
+              title="Outer iFrame"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── New Tab ────────────────────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>New Tab / Window</h3><span class="tag tag-green">Scenario: switch to new window handle</span></div>
+        <div class="card-body">
+          <div class="alert alert-info mb-3">
+            <span>💡</span>
+            <div>
+              <strong>Selenium:</strong> Store handles, click button, switch to new handle.<br/>
+              <code>Set&lt;String&gt; handles = driver.getWindowHandles();</code>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-3 mb-3">
+            <button id="btn-new-tab" name="openNewTab" class="btn btn-primary" data-testid="btn-new-tab" onclick="openNewTab()">
+              Open New Tab
+            </button>
+            <button id="btn-new-window" name="openNewWindow" class="btn btn-secondary" data-testid="btn-new-window" onclick="openNewWindow()">
+              Open New Window (600×400)
+            </button>
+            <a id="link-new-tab" name="linkNewTab" href="/pages/iframe-content.html" target="_blank" class="btn btn-outline" data-testid="link-new-tab" rel="noopener">
+              Link Opens New Tab
+            </a>
+          </div>
+          <p id="window-result" name="windowResult" data-testid="window-result" class="text-muted"></p>
+        </div>
+      </div>
+
+      <!-- ── Frame interaction demo ─────────────────────────── -->
+      <div class="card">
+        <div class="card-header"><h3>Parent ↔ iFrame Communication</h3><span class="tag tag-purple">Scenario: postMessage across frames</span></div>
+        <div class="card-body">
+          <div class="grid grid-2">
+            <div>
+              <p class="text-muted mb-3">Send a message from parent to the iframe below:</p>
+              <div class="form-group">
+                <input id="msg-to-frame" name="msgToFrame" type="text" class="form-control" placeholder="Type a message..." data-testid="msg-to-frame" value="Hello from parent!" />
+              </div>
+              <button id="btn-send-to-frame" name="sendToFrame" class="btn btn-primary btn-sm" data-testid="btn-send-to-frame" onclick="sendToFrame()">Send to iFrame</button>
+              <p id="parent-recv" name="parentRecv" data-testid="parent-recv" class="text-muted mt-3"></p>
+            </div>
+            <div class="iframe-wrap">
+              <iframe
+                id="iframe-messenger"
+                name="iframeMessenger"
+                data-testid="iframe-messenger"
+                src="/pages/iframe-content.html"
+                height="200"
+                title="Messenger iFrame"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div id="toast-container"></div>
+  <script src="/js/mock-api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    function openNewTab() {
+      window.open('/pages/iframe-content.html', '_blank');
+      document.getElementById('window-result').textContent = 'New tab opened — switch window handles in your automation script.';
+    }
+    function openNewWindow() {
+      window.open('/pages/iframe-content.html', 'newwin', 'width=600,height=400,left=200,top=200');
+      document.getElementById('window-result').textContent = 'New window opened (600×400).';
+    }
+    function sendToFrame() {
+      const msg = document.getElementById('msg-to-frame').value;
+      const frame = document.getElementById('iframe-messenger');
+      frame.contentWindow.postMessage({ type:'PARENT_MSG', text: msg }, '*');
+    }
+    window.addEventListener('message', (e) => {
+      if (e.data && e.data.type === 'FRAME_REPLY') {
+        document.getElementById('parent-recv').textContent = `Reply from iFrame: "${e.data.text}"`;
+        showToast('Message received from iFrame!', 'info');
+      }
+    });
+  </script>
+</body>
+</html>
