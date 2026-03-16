@@ -35,7 +35,7 @@ Open the app in your browser at `http://localhost:3000`.
 
 - Basic elements
 - Advanced elements
-- Alerts & popupsss
+- Alerts & popups
 - Frames & windows
 - Iframe content
 - Shadow DOM
